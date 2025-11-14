@@ -1,4 +1,4 @@
-import "./mediaDetails.css";
+import "./MediaDetails.css";
 // import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -6,7 +6,7 @@ import MediaCredits from "../../components/mediaCredits/MediaCredits";
 import MediaContentSlider from "../../components/mediaContentSlider/MediaContentSlider";
 import { useQuery } from "@tanstack/react-query";
 import AgeWarningPopup from "../../components/ageWarningPopUp/AgeWarningPopUp";
-import countries from "../../OtherData/countriesName";
+import countries from "../../data/country-name.js";
 
 interface Media {
   title: string;
@@ -29,7 +29,7 @@ interface Media {
 }
 
 const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
-  const [userConcent, setUserConcent] = useState<boolean|null>(null);
+  const [userConcent, setUserConcent] = useState<boolean | null>(null);
   const { id } = useParams();
 
   const {

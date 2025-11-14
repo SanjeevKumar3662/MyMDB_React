@@ -1,7 +1,9 @@
 import { useState } from "react";
-import "./ageWarningPopUp.css"; // we'll create this file
+import "./AgeWarningPopUp.css"; // we'll create this file
 
-const AgeWarningPopup :React.FC<{setConcent: React.Dispatch<React.SetStateAction<boolean|null>>}> =  ({ setConcent }) => {
+const AgeWarningPopup: React.FC<{
+  setConcent: React.Dispatch<React.SetStateAction<boolean | null>>;
+}> = ({ setConcent }) => {
   const [showPopup, setShowPopup] = useState(true);
 
   const handleConfirm = () => {
@@ -34,6 +36,6 @@ const AgeWarningPopup :React.FC<{setConcent: React.Dispatch<React.SetStateAction
       </div>
     </div>
   );
-}
+};
 
-export default  AgeWarningPopup;
+export default AgeWarningPopup;

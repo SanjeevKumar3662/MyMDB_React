@@ -1,4 +1,4 @@
-import "./mediaLists.css";
+import "./MediaLists.css";
 import Card from "../../components/card/Card";
 import PageNav from "../../components/pageNav/PageNav";
 import { useEffect, useState, useRef } from "react";

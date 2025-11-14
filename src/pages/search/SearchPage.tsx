@@ -1,4 +1,4 @@
-import "./searchPage.css";
+import "./SearchPage.css";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import Card from "../../components/card/Card";

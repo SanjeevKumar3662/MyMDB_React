@@ -1,4 +1,4 @@
-import "./shutDown.css";
+import "./ShutDown.css";
 
 export const ShutDown: React.FC = () => {
   return (

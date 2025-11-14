@@ -1,4 +1,4 @@
-import "./mediaContentSlider.css";
+import "./MediaContentSlider.css";
 // import { useState, useEffect } from "react";
 import VideoCards from "../card/VideoCards";
 import Slider from "react-slick";
@@ -54,7 +54,10 @@ const MediaContentSlider: React.FC<{
     );
   }
 
-  const getSlidesToShow = (type:string, breakpoint:number|string = "default") => {
+  const getSlidesToShow = (
+    type: string,
+    breakpoint: number | string = "default"
+  ) => {
     switch (breakpoint) {
       case "desktop":
         switch (type) {
@@ -146,20 +149,27 @@ const MediaContentSlider: React.FC<{
               case "videos":
                 return (
                   contentData &&
-                  contentData.results.map((video: { type: string; name: string; id: Key | null | undefined; key: string; }) => (
-                    <VideoCards
-                      type={video.type}
-                      title={video.name}
-                      key={video.id}
-                      videoId={video.key}
-                      mediaId={id}
-                    />
-                  ))
+                  contentData.results.map(
+                    (video: {
+                      type: string;
+                      name: string;
+                      id: Key | null | undefined;
+                      key: string;
+                    }) => (
+                      <VideoCards
+                        type={video.type}
+                        title={video.name}
+                        key={video.id}
+                        videoId={video.key}
+                        mediaId={id}
+                      />
+                    )
+                  )
                 );
               case "images":
                 return (
                   contentData &&
-                  contentData.backdrops.map((imgs: { file_path: string; }) => (
+                  contentData.backdrops.map((imgs: { file_path: string }) => (
                     <div className="backdrop-border">
                       <img
                         className="backdrops"
@@ -173,9 +183,9 @@ const MediaContentSlider: React.FC<{
               case "recommendations":
                 return (
                   contentData &&
-                  contentData.results.map((media:any) => (
+                  contentData.results.map((media: any) => (
                     <Card
-                    // {console.log(media)}
+                      // {console.log(media)}
                       cssClass={"sliding-cards"}
                       {...media}
                       linkTo={media_type + "_details"}

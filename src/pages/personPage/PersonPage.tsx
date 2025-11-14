@@ -1,7 +1,7 @@
 //all the styles for this page is in this,because of react.lazy if page is refreshed,
 //  this page losses all required styles
-import "../media/mediaDetails.css"; //styles for main info section i.e :details-container
-import "../../components/slidingCards/slidingCards.css"; // this is need for credit slider styles, on refresh this was not imported
+import "../media/MediaDetails.css"; //styles for main info section i.e :details-container
+import "../../components/slidingCards/SlidingCards.css"; // this is need for credit slider styles, on refresh this was not imported
 import personBg from "/personBg.png";
 // import SlidingCards from "../../components/slidingCards/SlidingCards";
 import { useQueries } from "@tanstack/react-query";
@@ -103,7 +103,7 @@ const PersonPage: React.FC = () => {
             <div className="also-know-as">
               Also Know As :
               {person.data.also_known_as &&
-                person.data.also_known_as.map((ele:string, index:number) => (
+                person.data.also_known_as.map((ele: string, index: number) => (
                   <span key={index}> {ele}, </span>
                 ))}
             </div>
@@ -113,8 +113,9 @@ const PersonPage: React.FC = () => {
             </span>
             <span className="">
               Age :{" "}
-              {person.data.birthday && new Date().getFullYear() -
-                Number(person.data.birthday.slice(0, 4))}
+              {person.data.birthday &&
+                new Date().getFullYear() -
+                  Number(person.data.birthday.slice(0, 4))}
             </span>
             {person.data && person.data.deathday && (
               <span className="">Date Of Death : {person.data.deathday}</span>

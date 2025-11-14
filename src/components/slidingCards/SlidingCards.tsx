@@ -1,4 +1,4 @@
-import "./slidingCards.css";
+import "./SlidingCards.css";
 import Card from "../../components/card/Card";
 // import { useEffect, useState } from "react";
 

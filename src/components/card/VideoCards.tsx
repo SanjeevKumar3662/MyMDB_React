@@ -1,4 +1,4 @@
-import "./videoCards.css";
+import "./VideoCards.css";
 import { useState } from "react";
 import { useEffect } from "react";
 
