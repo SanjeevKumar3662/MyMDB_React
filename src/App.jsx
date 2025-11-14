@@ -9,9 +9,9 @@ import "./App.css";
 const Header = lazy(() => import("./components/header/Header"));
 const MediaLists = lazy(() => import("./pages/media/MediaLists"));
 const MovieDetails = lazy(() => import("./pages/media/MediaDetails"));
-const HomePage = lazy(() => import("./pages/homePage/HomePage"));
-const PersonPage = lazy(() => import("./pages/personPage/PersonPage"));
-const ShutDown = lazy(() => import("./pages/homePage/ShutDown"));
+const HomePage = lazy(() => import("./pages/home-page/HomePage"));
+const PersonPage = lazy(() => import("./pages/person-page/PersonPage"));
+const ShutDown = lazy(() => import("./pages/home-page/ShutDown"));
 const SearchPage = lazy(() => import("./pages/search/SearchPage"));
 
 function App() {

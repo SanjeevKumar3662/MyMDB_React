@@ -1,6 +1,6 @@
 import "./MediaLists.css";
 import Card from "../../components/card/Card";
-import PageNav from "../../components/pageNav/PageNav";
+import PageNav from "../../components/page-nav/PageNav";
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";

@@ -2,8 +2,8 @@ import "./SearchPage.css";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import Card from "../../components/card/Card";
-import PageNav from "../../components/pageNav/PageNav";
-import SearchInput from "../../components/searchInput/SearchInput";
+import PageNav from "../../components/page-nav/PageNav";
+import SearchInput from "../../components/search-input/SearchInput";
 import { useQuery } from "@tanstack/react-query";
 
 //imports for react-slider

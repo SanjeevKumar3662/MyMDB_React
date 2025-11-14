@@ -2,10 +2,10 @@ import "./MediaDetails.css";
 // import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import MediaCredits from "../../components/mediaCredits/MediaCredits";
-import MediaContentSlider from "../../components/mediaContentSlider/MediaContentSlider";
+import MediaCredits from "../../components/media-credits/MediaCredits";
+import MediaContentSlider from "../../components/media-content-slider/MediaContentSlider";
 import { useQuery } from "@tanstack/react-query";
-import AgeWarningPopup from "../../components/ageWarningPopUp/AgeWarningPopUp";
+import AgeWarningPopup from "../../components/age-warning-popup/AgeWarningPopUp";
 import countries from "../../data/country-name.js";
 
 interface Media {

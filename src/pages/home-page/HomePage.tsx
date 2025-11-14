@@ -1,7 +1,7 @@
 import heroImage from "/hero.webp";
 import "./HomePage.css";
-import SlidingCards from "../../components/slidingCards/SlidingCards";
-import SearchInput from "../../components/searchInput/SearchInput";
+import SlidingCards from "../../components/sliding-cards/SlidingCards";
+import SearchInput from "../../components/search-input/SearchInput";
 import * as React from "react";
 
 const HomePage: React.FC = () => {

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import "./MediaCredits.css";
 import Card from "../card/Card";
-import "../slidingCards/SlidingCards.css"; // because of lazy loading, styles for slider was imported on refresh
+import "../sliding-cards/SlidingCards.css"; // because of lazy loading, styles for slider was imported on refresh
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";

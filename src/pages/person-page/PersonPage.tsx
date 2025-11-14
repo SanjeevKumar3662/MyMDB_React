@@ -1,7 +1,7 @@
 //all the styles for this page is in this,because of react.lazy if page is refreshed,
 //  this page losses all required styles
 import "../media/MediaDetails.css"; //styles for main info section i.e :details-container
-import "../../components/slidingCards/SlidingCards.css"; // this is need for credit slider styles, on refresh this was not imported
+import "../../components/sliding-cards/SlidingCards.css"; // this is need for credit slider styles, on refresh this was not imported
 import personBg from "/personBg.png";
 // import SlidingCards from "../../components/slidingCards/SlidingCards";
 import { useQueries } from "@tanstack/react-query";

@@ -1,5 +1,5 @@
 import "./SlidingCards.css";
-import Card from "../../components/card/Card";
+import Card from "../card/Card";
 // import { useEffect, useState } from "react";
 
 //for slider
