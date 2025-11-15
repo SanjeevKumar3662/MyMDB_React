@@ -5,19 +5,25 @@ const PageNav: React.FC<{
   prevClick: () => void;
   nextClick: () => void;
   page: number;
+  maxPage: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ prevClick, nextClick, page, setPage }) => {
+}> = ({ prevClick, maxPage, nextClick, page, setPage }) => {
   const [isEdit, setEdit] = useState(false);
+
   function onPageEditClick(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
-      console.log("enter");
+      // console.log("enter");
       const newPage = parseInt(e.currentTarget.value); //string to number
       if (isFinite(newPage) && newPage >= 1) {
         //on valid number, no NaN or Infinity
-        setPage(newPage);
+        if (newPage > maxPage) {
+          setPage(maxPage);
+        } else {
+          setPage(newPage);
+        }
       }
 
-      console.log(newPage);
+      // console.log(newPage);
       setEdit(() => !isEdit);
     }
   }

@@ -10,8 +10,8 @@ interface Movie {
   title: string;
   overview: string;
   poster_path: string;
-  // add more fields as needed
 }
+
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const MediaLists: React.FC<{
@@ -19,47 +19,37 @@ const MediaLists: React.FC<{
   list_type: string;
   headerText: string;
 }> = ({ media_type, list_type, headerText }) => {
-  //  const [listData, setlistData] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // get initial page from URL
-  const pageFromURL = parseInt(searchParams.get("page") || "1");
+  // Read page from URL
+  const pageFromURL = parseInt(searchParams.get("page") || "1", 10);
   const [page, setPage] = useState(pageFromURL);
 
-  // --- keep URL in sync (merge instead of overwrite) ---
+  // Sync URL whenever page or list_type changes
   useEffect(() => {
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
       newParams.set("page", String(page));
-      newParams.set("list_type", list_type); // always from props
+      newParams.set("list_type", list_type);
       return newParams;
     });
   }, [page, list_type, setSearchParams]);
 
-  // --- reset page when media_type OR list_type changes ---
+  // Reset page when media_type or list_type changes
   const prevKeyRef = useRef("");
-
   useEffect(() => {
     const newKey = `${media_type}-${list_type}`;
     if (prevKeyRef.current && prevKeyRef.current !== newKey) {
-      setPage(1); // reset page
+      setPage(1);
     }
     prevKeyRef.current = newKey;
   }, [media_type, list_type]);
 
-  const {
-    data: listData,
-    isPending,
-    isError,
-  } = useQuery<Movie[]>({
-    queryKey: [media_type, list_type, page],
-    queryFn: fetchList,
-  });
-
+  // ----------- FETCH FUNCTION ----------------
   async function fetchList() {
-    const response = await fetch(
-      `${SERVER_URI}/api/v1/media/list/${media_type}/${list_type}/${page}`
-    );
+    const url = `${SERVER_URI}/api/v1/media/list/${media_type}/${list_type}/${page}`;
+
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(
@@ -69,9 +59,17 @@ const MediaLists: React.FC<{
 
     const json = await response.json();
 
-    // Always return an array
-    return json.data?.results ?? [];
+    return {
+      results: json.data?.results ?? [],
+      total_pages: json.data?.total_pages ?? 1,
+    };
   }
+
+  // ----------- REACT QUERY ----------------------
+  const { data, isPending, isError } = useQuery({
+    queryKey: [media_type, list_type, page],
+    queryFn: fetchList,
+  });
 
   if (isPending) {
     return (
@@ -88,41 +86,47 @@ const MediaLists: React.FC<{
     );
   }
 
-  if (isError) {
-    return <div>Error in media List page</div>;
+  if (isError || !data) {
+    return <div>Error in media list page</div>;
   }
 
-  // console.log(listData[0]);
+  const maxPage = data.total_pages;
+
   return (
     <div className="movie-container">
       <h1>{headerText}</h1>
+
+      {/* ---- TOP PAGE NAV ---- */}
       <PageNav
-        prevClick={() => setPage(page > 1 ? () => page - 1 : page)}
-        nextClick={() => setPage(() => page + 1)}
+        prevClick={() => page > 1 && setPage(page - 1)}
+        nextClick={() => page < maxPage && setPage(page + 1)}
         page={page}
+        maxPage={maxPage}
         setPage={setPage}
-      ></PageNav>
+      />
+
+      {/* ---- MOVIE CARDS ---- */}
       <div className="flex-container">
-        {listData ? (
-          listData.map((movie) => (
-            <Card
-              key={movie.id}
-              cssClass={"card"}
-              linkTo={media_type + "_details"}
-              {...movie}
-            ></Card>
-          ))
-        ) : (
-          <h1>Loading...</h1>
-        )}
+        {data.results.map((movie: Movie) => (
+          <Card
+            key={movie.id}
+            cssClass="card"
+            linkTo={media_type + "_details"}
+            {...movie}
+          />
+        ))}
       </div>
+
+      {/* ---- BOTTOM PAGE NAV ---- */}
       <PageNav
-        prevClick={() => setPage(page > 1 ? () => page - 1 : page)}
-        nextClick={() => setPage(() => page + 1)}
+        prevClick={() => page > 1 && setPage(page - 1)}
+        nextClick={() => page < maxPage && setPage(page + 1)}
         page={page}
+        maxPage={maxPage}
         setPage={setPage}
-      ></PageNav>
+      />
     </div>
   );
 };
+
 export default MediaLists;
