@@ -1,7 +1,7 @@
 import "./MediaDetails.css";
 // import { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { ServerRouter, useParams } from "react-router-dom";
 import MediaCredits from "../../components/media-credits/MediaCredits";
 import MediaContentSlider from "../../components/media-content-slider/MediaContentSlider";
 import { useQuery } from "@tanstack/react-query";
@@ -28,6 +28,8 @@ interface Media {
   genres: { id: number; name: string }[];
 }
 
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
+
 const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
   const [userConcent, setUserConcent] = useState<boolean | null>(null);
   const { id } = useParams();
@@ -45,14 +47,16 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
   async function fetchDetails() {
     try {
       const response = await fetch(
-        `https://first-backend-eight.vercel.app/media_details/${media_type}/${id}`
+        `${SERVER_URI}/api/v1/media/details/${media_type}/${id}`
       );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return await response.json();
+      const data = await response.json();
+
+      return data.data;
     } catch (error) {
       console.error(
         `error occured while fetching media details for ${media_type},id:${id}`,

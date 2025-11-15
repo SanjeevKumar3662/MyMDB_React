@@ -43,6 +43,8 @@ interface PersonResult extends SearchResultBase {
 
 type SearchResult = MovieResult | TvResult | PersonResult;
 
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
+
 const SearchPage = () => {
   // const [searchRes, setSearchRes] = useState(null);
   //for getting page from url
@@ -79,10 +81,11 @@ const SearchPage = () => {
   async function fetchMedia() {
     try {
       const response = await fetch(
-        `https://first-backend-eight.vercel.app/search/${query_type}/${query}/${page}`
+        `${SERVER_URI}/api/v1/media/search/${query_type}/${query}/${page}`
       );
       const data = await response.json();
-      return await data;
+      console.log(data.data);
+      return await data.data;
     } catch (error) {
       console.error(
         `error occured while fetching Search Page for query_type: ${query_type} ,query: ${query} ,page: ${page}`,

@@ -1,10 +1,10 @@
 import "./MediaContentSlider.css";
-// import { useState, useEffect } from "react";
 import VideoCards from "../card/VideoCards";
 import Slider from "react-slick";
 import Card from "../card/Card";
 import { useQuery } from "@tanstack/react-query";
-import { Key } from "react";
+
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const MediaContentSlider: React.FC<{
   media_type: string;
@@ -14,94 +14,70 @@ const MediaContentSlider: React.FC<{
   const {
     data: contentData,
     isError,
-    isPending,
+    isLoading,
   } = useQuery({
     queryKey: [media_type, id, content_type],
     queryFn: fetchContentData,
+    enabled: Boolean(id),
   });
 
   async function fetchContentData() {
-    try {
-      const response = await fetch(
-        `https://first-backend-eight.vercel.app/media_content/${media_type}/${id}/${content_type}`
-      );
-      return await await response.json();
-    } catch (error) {
-      console.error(
-        `error occured while fetching media Lists for ${media_type} ,id: ${id} ,content_type: ${content_type}`,
-        "\n",
-        error
-      );
+    const response = await fetch(
+      `${SERVER_URI}/api/v1/media/content/${media_type}/${id}/${content_type}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch media content");
     }
+
+    const json = await response.json();
+    return json.data ?? {};
   }
 
-  if (isError) {
-    return <div>Error in media details page</div>;
-  }
+  if (isError) return <div>Error loading media content.</div>;
 
-  if (isPending) {
+  if (isLoading) {
     return (
-      <div
-        style={{
-          height: "80vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className="loader-wrapper">
         <span className="loader"></span>
       </div>
     );
   }
 
-  const getSlidesToShow = (
-    type: string,
-    breakpoint: number | string = "default"
-  ) => {
-    switch (breakpoint) {
+  if (!contentData) return null;
+
+  const images = contentData.backdrops ?? [];
+  const results = contentData.results ?? [];
+
+  // If nothing available
+  if (
+    (content_type === "images" && images.length === 0) ||
+    (content_type !== "images" && results.length === 0)
+  ) {
+    return null;
+  }
+
+  const getSlidesToShow = (type: string, bp: number | string = "desktop") => {
+    switch (bp) {
       case "desktop":
-        switch (type) {
-          case "videos":
-            return 2;
-          case "images":
-            return 3;
-          case "recommendations":
-            return 8;
-          default:
-            return 3;
-        }
+        return type === "videos" ? 2 : type === "images" ? 3 : 8;
       case 1200:
-        switch (type) {
-          case "videos":
-            return 1;
-          case "images":
-            return 2;
-          case "recommendations":
-            return 4;
-          default:
-            return 3;
-        }
+        return type === "videos" ? 1 : type === "images" ? 2 : 4;
       case 520:
-        switch (type) {
-          case "videos":
-            return 1;
-          case "images":
-            return 1;
-          case "recommendations":
-            return 2;
-          default:
-            return 3;
-        }
+        return type === "videos" ? 1 : type === "images" ? 1 : 2;
+      default:
+        return 3;
     }
   };
 
-  const settings = {
+  // Now create settings FIRST
+  const settings: any = {
     dots: false,
     infinite: true,
     speed: 200,
     slidesToShow: getSlidesToShow(content_type, "desktop"),
     slidesToScroll: content_type === "recommendations" ? 4 : 1,
-    lazyLoad: "ondemand" as "ondemand",
+    lazyLoad: "ondemand",
     lazyLoadBuffer: 3,
     responsive: [
       {
@@ -121,82 +97,49 @@ const MediaContentSlider: React.FC<{
     ],
   };
 
-  if (
-    (contentData.backdrops && contentData.backdrops.length === 0) ||
-    (contentData.results && contentData.results.length === 0)
-  ) {
-    return;
-  }
-
-  contentData &&
-    (() => {
-      switch (content_type) {
-        case "images":
-          contentData.backdrops.length <= 1 && (settings.infinite = false);
-          break;
-        case "videos":
-          contentData.results.length <= 1 && (settings.infinite = false);
-          break;
-      }
-    })();
+  // Disable infinite AFTER settings exist
+  if (content_type === "images" && images.length <= 1)
+    settings.infinite = false;
+  if (content_type === "videos" && results.length <= 1)
+    settings.infinite = false;
 
   return (
-    <>
-      <div className="slider-bg" style={{ padding: "10px" }}>
-        <Slider {...settings}>
-          {(() => {
-            switch (content_type) {
-              case "videos":
-                return (
-                  contentData &&
-                  contentData.results.map(
-                    (video: {
-                      type: string;
-                      name: string;
-                      id: Key | null | undefined;
-                      key: string;
-                    }) => (
-                      <VideoCards
-                        type={video.type}
-                        title={video.name}
-                        key={video.id}
-                        videoId={video.key}
-                        mediaId={id}
-                      />
-                    )
-                  )
-                );
-              case "images":
-                return (
-                  contentData &&
-                  contentData.backdrops.map((imgs: { file_path: string }) => (
-                    <div className="backdrop-border">
-                      <img
-                        className="backdrops"
-                        loading="lazy"
-                        src={`https://image.tmdb.org/t/p/w780${imgs.file_path}`}
-                        alt=""
-                      />
-                    </div>
-                  ))
-                );
-              case "recommendations":
-                return (
-                  contentData &&
-                  contentData.results.map((media: any) => (
-                    <Card
-                      // {console.log(media)}
-                      cssClass={"sliding-cards"}
-                      {...media}
-                      linkTo={media_type + "_details"}
-                    />
-                  ))
-                );
-            }
-          })()}
-        </Slider>
-      </div>
-    </>
+    <div className="slider-bg" style={{ padding: "10px" }}>
+      <Slider {...settings}>
+        {content_type === "videos" &&
+          results.map((video: any) => (
+            <VideoCards
+              key={video.id ?? video.key}
+              type={video.type}
+              title={video.name}
+              videoId={video.key}
+              mediaId={id}
+            />
+          ))}
+
+        {content_type === "images" &&
+          images.map((img: any, i: number) => (
+            <div className="backdrop-border" key={i}>
+              <img
+                className="backdrops"
+                loading="lazy"
+                src={`https://image.tmdb.org/t/p/w780${img.file_path}`}
+                alt=""
+              />
+            </div>
+          ))}
+
+        {content_type === "recommendations" &&
+          results.map((media: any) => (
+            <Card
+              key={media.id}
+              cssClass="sliding-cards"
+              {...media}
+              linkTo={`${media_type}_details`}
+            />
+          ))}
+      </Slider>
+    </div>
   );
 };
 

@@ -12,6 +12,7 @@ interface Movie {
   poster_path: string;
   // add more fields as needed
 }
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const MediaLists: React.FC<{
   media_type: string;
@@ -56,23 +57,20 @@ const MediaLists: React.FC<{
   });
 
   async function fetchList() {
-    try {
-      const response = await fetch(
-        `https://first-backend-eight.vercel.app/media_lists/${media_type}/${list_type}/${page}`
-      );
-      const data = await response.json();
+    const response = await fetch(
+      `${SERVER_URI}/api/v1/media/list/${media_type}/${list_type}/${page}`
+    );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return await data.results;
-    } catch (error) {
-      console.error(
-        `error occured while fetching media Lists for ${media_type} ,list type: ${list_type} ,page: ${page}`,
-        "\n",
-        error
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch ${media_type} ${list_type} page ${page} — status ${response.status}`
       );
     }
+
+    const json = await response.json();
+
+    // Always return an array
+    return json.data?.results ?? [];
   }
 
   if (isPending) {

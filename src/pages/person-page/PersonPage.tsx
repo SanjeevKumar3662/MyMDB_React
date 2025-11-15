@@ -5,10 +5,11 @@ import "../../components/sliding-cards/SlidingCards.css"; // this is need for cr
 import personBg from "/personBg.png";
 // import SlidingCards from "../../components/slidingCards/SlidingCards";
 import { useQueries } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { ServerRouter, useParams } from "react-router-dom";
 // import { useState, useEffect } from "react";
 
 import { PersonCreditSlider } from "./PersonCreditSlider";
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const PersonPage: React.FC = () => {
   const { id } = useParams();
@@ -151,52 +152,42 @@ const PersonPage: React.FC = () => {
   );
 
   async function fetchDetails() {
-    try {
-      const response = await fetch(
-        `https://first-backend-eight.vercel.app/media_details/person/${id}`
-      );
-      return await response.json();
-    } catch (error) {
-      console.error(
-        `error occured while fetching fetchDetails in Person page for ID: ${id}`,
-        "\n",
-        error
-      );
+    const response = await fetch(
+      `${SERVER_URI}/api/v1/media/details/person/${id}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch person details for ${id}`);
     }
+
+    const json = await response.json();
+    return json.data ?? {}; // always returns object
   }
 
   async function fetchMovieCredits() {
-    try {
-      const response = await fetch(
-        `https://first-backend-eight.vercel.app/media_content/${"person"}/${id}/${"movie_credits"}`
-      );
-      const data = await response.json();
+    const response = await fetch(
+      `${SERVER_URI}/api/v1/media/content/person/${id}/movie_credits`
+    );
 
-      return data;
-    } catch (error) {
-      console.error(
-        `error occured while fetching movie credit in Person page for ID: ${id}`,
-        "\n",
-        error
-      );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch movie credits for person ${id}`);
     }
+
+    const json = await response.json();
+    return json.data ?? { cast: [], crew: [] }; // always safe
   }
 
   async function fetchTvCredits() {
-    try {
-      const response = await fetch(
-        `https://first-backend-eight.vercel.app/media_content/${"person"}/${id}/${"tv_credits"}`
-      );
-      const data = await response.json();
+    const response = await fetch(
+      `${SERVER_URI}/api/v1/media/content/person/${id}/tv_credits`
+    );
 
-      return data;
-    } catch (error) {
-      console.error(
-        `error occured while fetching tv credits in Person page for ID: ${id}`,
-        "\n",
-        error
-      );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch TV credits for person ${id}`);
     }
+
+    const json = await response.json();
+    return json.data ?? { cast: [], crew: [] }; // always safe
   }
 };
 export default PersonPage;

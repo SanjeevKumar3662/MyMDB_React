@@ -26,6 +26,9 @@ interface SlidingCardsProps {
   credits?: CardData[]; // optional
   videos?: CardData[]; // optional
 }
+
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
+
 const SlidingCards = ({
   media_type,
   list_type,
@@ -47,20 +50,17 @@ const SlidingCards = ({
   });
 
   async function fetchData() {
-    try {
-      const response = await fetch(
-        `https://first-backend-eight.vercel.app/media_lists/${media_type}/${list_type}/${page}`
-      );
-      const data = await response.json();
-      // console.log(data);
-      return await data.results;
-    } catch (error) {
-      console.error(
-        `error occured while fetching SlidingCards component for ${media_type} ,list type: ${list_type} ,page: ${page}`,
-        "\n",
-        error
-      );
+    const response = await fetch(
+      `${SERVER_URI}/api/v1/media/list/${media_type}/${list_type}/${page}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${media_type} ${list_type}`);
     }
+
+    const data = await response.json();
+
+    return data.data?.results ?? [];
   }
 
   if (isError) {

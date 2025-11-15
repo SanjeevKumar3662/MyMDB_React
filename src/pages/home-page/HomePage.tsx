@@ -5,6 +5,8 @@ import SearchInput from "../../components/search-input/SearchInput";
 import * as React from "react";
 
 const HomePage: React.FC = () => {
+  console.log("SERVER_URI:", import.meta.env.VITE_SERVER_URI);
+
   return (
     <main>
       <section className="hero">
