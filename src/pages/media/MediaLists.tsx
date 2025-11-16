@@ -50,7 +50,6 @@ const MediaLists: React.FC<{
     const url = `${SERVER_URI}/api/v1/media/list/${media_type}/${list_type}/${page}`;
 
     const response = await fetch(url);
-
     if (!response.ok) {
       throw new Error(
         `Failed to fetch ${media_type} ${list_type} page ${page} — status ${response.status}`
@@ -58,10 +57,11 @@ const MediaLists: React.FC<{
     }
 
     const json = await response.json();
+    // console.log("out data", json);
 
     return {
-      results: json.data?.results ?? [],
-      total_pages: json.data?.total_pages ?? 1,
+      results: Array.isArray(json?.data?.results) ? json.data.results : [],
+      total_pages: Number(json?.data?.total_pages) || 1,
     };
   }
 
@@ -91,7 +91,7 @@ const MediaLists: React.FC<{
   }
 
   const maxPage = data.total_pages;
-
+  // console.log("maxpage we have", maxPage);
   return (
     <div className="movie-container">
       <h1>{headerText}</h1>
@@ -99,7 +99,7 @@ const MediaLists: React.FC<{
       {/* ---- TOP PAGE NAV ---- */}
       <PageNav
         prevClick={() => page > 1 && setPage(page - 1)}
-        nextClick={() => page < maxPage && setPage(page + 1)}
+        nextClick={() => page < Math.min(maxPage, 500) && setPage(page + 1)}
         page={page}
         maxPage={maxPage}
         setPage={setPage}
@@ -107,7 +107,7 @@ const MediaLists: React.FC<{
 
       {/* ---- MOVIE CARDS ---- */}
       <div className="flex-container">
-        {data.results.map((movie: Movie) => (
+        {data.results?.map?.((movie: Movie) => (
           <Card
             key={movie.id}
             cssClass="card"
@@ -120,7 +120,7 @@ const MediaLists: React.FC<{
       {/* ---- BOTTOM PAGE NAV ---- */}
       <PageNav
         prevClick={() => page > 1 && setPage(page - 1)}
-        nextClick={() => page < maxPage && setPage(page + 1)}
+        nextClick={() => page < Math.min(maxPage, 500) && setPage(page + 1)}
         page={page}
         maxPage={maxPage}
         setPage={setPage}

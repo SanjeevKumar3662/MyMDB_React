@@ -12,19 +12,20 @@ const PageNav: React.FC<{
 
   function onPageEditClick(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter") {
-      // console.log("enter");
-      const newPage = parseInt(e.currentTarget.value); //string to number
+      const newPage = parseInt(e.currentTarget.value);
+
       if (isFinite(newPage) && newPage >= 1) {
-        //on valid number, no NaN or Infinity
-        if (newPage > maxPage) {
-          setPage(maxPage);
-        } else {
-          setPage(newPage);
-        }
+        // TMDB hard limit
+        const HARD_LIMIT = 500;
+
+        const safeMaxPage = Math.min(maxPage, HARD_LIMIT);
+
+        const finalPage = Math.min(newPage, safeMaxPage);
+
+        setPage(finalPage);
       }
 
-      // console.log(newPage);
-      setEdit(() => !isEdit);
+      setEdit(!isEdit);
     }
   }
 
