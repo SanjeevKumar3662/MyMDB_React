@@ -2,7 +2,16 @@ import gitLogo from "/GitHub-logo.png";
 import { Link } from "react-router-dom";
 import "./Header.css";
 
+import { useAuth } from "../../context/AuthProvider";
+
 export default function Header() {
+  const { user, isAuthenticated, loading, logout } = useAuth();
+  // console.log("user in header:", user);
+
+  if (loading) {
+    return <div>loading</div>;
+  }
+  console.log(isAuthenticated, user);
   return (
     <header className="header-container">
       <div className="left-header">
@@ -60,11 +69,17 @@ export default function Header() {
         </ul>
       </div>
 
-      {/* <div className="right-header">
-        <a href="">link 1</a>
-
-        <a href="">link2</a>
-      </div> */}
+      <div className="right-header">
+        {isAuthenticated ? (
+          <button onClick={() => logout()} className="btn">
+            Logout {user?.username}
+          </button>
+        ) : (
+          <Link to={"/auth"}>
+            <button className="btn">Login</button>
+          </Link>
+        )}
+      </div>
     </header>
   );
 }
