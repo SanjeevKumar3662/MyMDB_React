@@ -24,7 +24,21 @@ function App() {
     <>
       {/* if details then no header */}
       <AuthProvider>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div
+              className="btn"
+              style={{ padding: "1rem", textAlign: "center" }}
+            >
+              <strong>Please wait...</strong>
+              <br />
+              Our backend server is waking up from sleep.
+              <br />
+              Since it’s hosted on Render’s free plan, this can take 20–40
+              seconds.
+            </div>
+          }
+        >
           {<Header></Header>}
 
           <Routes>
