@@ -99,35 +99,35 @@ const SlidingCards = ({
     lazyLoadBuffer: 3,
     responsive: [
       {
-        breakpoint: 1350, // tablets
+        breakpoint: 1550, // tablets
         settings: {
           slidesToShow: 6,
-          slidesToScroll: 3,
+          // slidesToScroll: 3,
         },
       },
       {
         breakpoint: 1024, // tablets
         settings: {
-          slidesToShow: 5,
-          slidesToScroll: 3,
+          slidesToShow: 4,
+          // slidesToScroll: 3,
         },
       },
       {
         breakpoint: 768, // small tablets / large phones
         settings: {
-          slidesToShow: 4,
-          slidesToScroll: 3,
+          slidesToShow: 3,
+          // slidesToScroll: 3,
         },
       },
       {
         breakpoint: 620, // tablets
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 2,
+          slidesToShow: 2,
+          // slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 520, // mobile phones
+        breakpoint: 370, // mobile phones
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
