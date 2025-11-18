@@ -1,5 +1,6 @@
 import { useState, FormEvent } from "react";
 import { useAuth } from "../../context/AuthProvider";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface LoginProps {
   switchToRegister: () => void;
@@ -8,6 +9,7 @@ interface LoginProps {
 export default function Login({ switchToRegister }: LoginProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const { login } = useAuth();
 
@@ -22,7 +24,7 @@ export default function Login({ switchToRegister }: LoginProps) {
     }
 
     alert("Login successful!");
-    // navigate("/dashboard");
+    navigate("/");
   };
 
   return (
