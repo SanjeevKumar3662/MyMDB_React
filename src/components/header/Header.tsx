@@ -8,10 +8,10 @@ export default function Header() {
   const { user, isAuthenticated, loading, logout } = useAuth();
   // console.log("user in header:", user);
 
-  if (loading) {
-    return <div>loading</div>;
-  }
-  console.log(isAuthenticated, user);
+  // if (loading) {
+  //   return <div>loading</div>;
+  // }
+  // console.log(isAuthenticated, user);
   return (
     <header className="header-container">
       <div className="left-header">
