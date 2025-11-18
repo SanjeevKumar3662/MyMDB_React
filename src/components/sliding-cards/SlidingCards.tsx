@@ -1,3 +1,4 @@
+// this is only used in homepage for popular movies and tvs
 import "./SlidingCards.css";
 import Card from "../card/Card";
 // import { useEffect, useState } from "react";
@@ -82,13 +83,19 @@ const SlidingCards = ({
     );
   }
 
+  // console.log("credits length", movies);
   const settings = {
     dots: false,
-    infinite: credits && credits.length <= 8 ? false : true,
-    speed: 200,
+    infinite: movies && movies?.length <= 8 ? false : true,
+    speed: 500,
+    arrows: false,
+    autoplay: true,
+    autoplaySpeed: 3000,
     slidesToShow: 8,
-    slidesToScroll: 5,
+    slidesToScroll: 1,
+    centerMode: true,
     lazyLoad: "ondemand" as "ondemand",
+    pauseOnHover: true,
     lazyLoadBuffer: 3,
     responsive: [
       {
@@ -122,8 +129,8 @@ const SlidingCards = ({
       {
         breakpoint: 520, // mobile phones
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToShow: 1,
+          slidesToScroll: 1,
         },
       },
     ],

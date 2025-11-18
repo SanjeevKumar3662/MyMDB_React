@@ -202,6 +202,7 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
           id={id}
         />
       </div>
+      <p className="section-heading">Credits</p>
       <section className="credits-container slider-bg">
         <MediaCredits media_type={media_type} id={id} />
       </section>

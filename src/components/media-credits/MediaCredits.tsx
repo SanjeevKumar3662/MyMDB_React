@@ -54,25 +54,32 @@ const MediaCredits: React.FC<{
   if (cast.length === 0) return null;
 
   const settings = {
+    speed: 500,
+    arrows: false,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    centerMode: true,
+    pauseOnHover: true,
+    // dots: false,
+    // infinite: true,
+
     dots: false,
     infinite: cast.length > 8,
-    speed: 200,
+    // speed: 200,
     slidesToShow: 8,
-    slidesToScroll: 5,
+    slidesToScroll: 1,
     lazyLoadBuffer: 3,
     responsive: [
       { breakpoint: 1350, settings: { slidesToShow: 6, slidesToScroll: 3 } },
       { breakpoint: 1024, settings: { slidesToShow: 5, slidesToScroll: 3 } },
       { breakpoint: 768, settings: { slidesToShow: 4, slidesToScroll: 3 } },
       { breakpoint: 620, settings: { slidesToShow: 3, slidesToScroll: 2 } },
-      { breakpoint: 520, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+      { breakpoint: 520, settings: { slidesToShow: 1, slidesToScroll: 1 } },
     ],
   };
 
   return (
     <div className="credits-slider">
-      <h1>Credits</h1>
-
       <Slider {...settings}>
         {cast.map((person: any) => (
           <div key={person.id}>

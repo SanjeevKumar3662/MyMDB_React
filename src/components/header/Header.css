@@ -104,7 +104,7 @@ button:active {
 }
 
 @media (max-width: 500px) {
-  .header-container .btn{
+  .header-container .btn {
     font-size: 13px;
   }
 
@@ -114,20 +114,16 @@ button:active {
 
   /* currently right header only holdes
   dummy links, so hide on mobile */
-  .right-header {
-    display: none;
-  }
 }
 
-
 @media (max-width: 350px) {
-  .header-container .btn{
+  .header-container .btn {
     font-size: 12px;
     border-radius: 8px;
     /* color: black; */
     padding: 4px;
   }
-  .header-container{
-    gap:5px
+  .header-container {
+    gap: 5px;
   }
 }

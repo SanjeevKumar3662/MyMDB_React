@@ -1,18 +1,11 @@
 .backdrops-container {
   margin: 10px auto;
   /* padding: 10px 0; */
-  width: 90vw;
+  width: 100%;
 }
 
 .backdrops-container .backdrop-border img {
   width: 98%;
   border: 1px solid white;
   border-radius: 10px;
-}
-
-.rec-slider {
-  /* border: solid white; */
-  width: 90vw;
-  margin: 0 auto;
-  /* margin-bottom: 100px ; */
 }

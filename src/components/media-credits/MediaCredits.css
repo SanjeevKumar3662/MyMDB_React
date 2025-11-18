@@ -6,14 +6,12 @@
 
   /* border: 1px solid white; */
   /* background-color: rgba(18, 114, 144, 0.551); */
-  margin: 5px;
+  /* margin: 5px; */
   margin-bottom: 20px;
   border-radius: 20px;
-
-  h1 {
-    /* padding: 0; */
-    margin: 5px;
-  }
+}
+.video-container {
+  margin: auto 1rem;
 }
 
 .credits-slider {
@@ -53,7 +51,6 @@
     .character {
       font-size: 13px;
     }
-
   }
 }
 @media (max-width: 400px) {

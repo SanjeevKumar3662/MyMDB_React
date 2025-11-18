@@ -64,7 +64,7 @@ const MediaContentSlider: React.FC<{
       case 1200:
         return type === "videos" ? 1 : type === "images" ? 2 : 4;
       case 520:
-        return type === "videos" ? 1 : type === "images" ? 1 : 2;
+        return type === "videos" ? 1 : type === "images" ? 1 : 1;
       default:
         return 3;
     }
@@ -72,11 +72,19 @@ const MediaContentSlider: React.FC<{
 
   // Now create settings FIRST
   const settings: any = {
+    // dots: false,
+    // infinite: movies && movies?.length <= 8 ? false : true,
+    // speed: 3000,
+    arrows: content_type === "videos",
+    autoplay: content_type !== "videos",
+    autoplaySpeed: 3000,
+    centerMode: content_type !== "videos",
+    // pauseOnHover: true,
     dots: false,
     infinite: true,
-    speed: 200,
+    pauseOnFocus: true,
     slidesToShow: getSlidesToShow(content_type, "desktop"),
-    slidesToScroll: content_type === "recommendations" ? 4 : 1,
+    slidesToScroll: content_type === "recommendations" ? 1 : 1,
     lazyLoad: "ondemand",
     lazyLoadBuffer: 3,
     responsive: [
@@ -84,7 +92,7 @@ const MediaContentSlider: React.FC<{
         breakpoint: 1200,
         settings: {
           slidesToShow: getSlidesToShow(content_type, 1200),
-          slidesToScroll: content_type === "recommendations" ? 2 : 1,
+          slidesToScroll: content_type === "recommendations" ? 1 : 1,
         },
       },
       {
