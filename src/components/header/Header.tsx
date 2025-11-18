@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import "./Header.css";
 
 import { useAuth } from "../../context/AuthProvider";
+import { useState } from "react";
 
 export default function Header() {
-  const { user, isAuthenticated, loading, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   // console.log("user in header:", user);
 
   // if (loading) {
@@ -14,7 +17,49 @@ export default function Header() {
   // console.log(isAuthenticated, user);
   return (
     <header className="header-container">
+      <button
+        className="btn hambergar-menu"
+        onClick={() => setIsMenuOpen((prev) => !prev)}
+      >
+        =
+      </button>
       <div className="left-header">
+        {isMenuOpen && (
+          <div className="mobile-menu">
+            <h3>Movies</h3>
+            <ul>
+              <li>
+                <Link to="/movie/now_playing">Now Playing</Link>
+              </li>
+              <li>
+                <Link to="/movie/popular">Popular</Link>
+              </li>
+              <li>
+                <Link to="/movie/top_rated">Top Rated</Link>
+              </li>
+              <li>
+                <Link to="/movie/upcoming">Upcoming</Link>
+              </li>
+            </ul>
+
+            <h3>TV Shows</h3>
+            <ul>
+              <li>
+                <Link to="/tv/popular">Popular</Link>
+              </li>
+              <li>
+                <Link to="/tv/airing_today">Airing Today</Link>
+              </li>
+              <li>
+                <Link to="/tv/top_rated">Top Rated</Link>
+              </li>
+              <li>
+                <Link to="/tv/on_the_air">On The Air</Link>
+              </li>
+            </ul>
+          </div>
+        )}
+
         <Link to={"/"}>
           <button className="btn">Home</button>
         </Link>
