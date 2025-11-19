@@ -7,7 +7,7 @@ import MediaContentSlider from "../../components/media-content-slider/MediaConte
 import { useQuery } from "@tanstack/react-query";
 import AgeWarningPopup from "../../components/age-warning-popup/AgeWarningPopUp";
 import countries from "../../data/country-name.js";
-import { addToWatchlist, getWatchlist } from "./utils/watchlist-funcions.js";
+import { addToWatchlist, getWatchlist } from "../../utils/watchlist-funcions";
 import WatchlistEditModal from "../user-watchlist-page/WatchlistEditModal";
 
 interface Media {
@@ -266,18 +266,16 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
               Add to Watchlist
             </button>
           ) : (
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div className="flex justify-center gap-2 mt-4">
               <button
                 onClick={() => setModalOpen(true)}
                 className="px-4 py-2 bg-emerald-600 text-white rounded"
               >
-                {watchlistEntry.status?.replace("_", " ") ?? "In list"}
+                {watchlistEntry?.status?.replace("_", " ") ?? "In list"}
               </button>
+
               <button
-                onClick={() => {
-                  // quick action: open modal to edit
-                  setModalOpen(true);
-                }}
+                onClick={() => setModalOpen(true)}
                 className="px-3 py-2 bg-gray-700 text-white rounded"
               >
                 Edit
