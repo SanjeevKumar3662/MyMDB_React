@@ -160,11 +160,6 @@ button:active {
   margin: 10px 0;
 }
 
-.hambergar-menu {
-  /* font-size: 24px; */
-  display: none;
-}
-
 .block {
   display: block;
 }
@@ -175,15 +170,15 @@ button:active {
 
 /* show hamburger on small screens */
 @media (max-width: 900px) {
-  .hambergar-menu {
+  /* .hambergar-menu {
     display: block;
-  }
+  } */
 
   .mid-header {
     display: none;
   }
   .mobile-menu {
-    top: 50px;
+    top: 45px;
   }
 }
 
@@ -194,10 +189,6 @@ button:active {
 
   .github-btn span {
     display: none;
-  }
-
-  .mobile-menu {
-    top: 40px;
   }
 
   /* currently right header only holdes
@@ -213,9 +204,5 @@ button:active {
   }
   .header-container {
     gap: 5px;
-  }
-
-  .mobile-menu {
-    top: 40px;
   }
 }
