@@ -6,18 +6,26 @@ import gitLogo from "/GitHub-logo.png";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
-export const HambergerMenu = ({ isMenuOpen, toggleMenu, closeMenu }) => {
+export const HambergerMenu = ({
+  isMenuOpen,
+  toggleMenu,
+  closeMenu,
+  buttonRef,
+}) => {
   const { user, isAuthenticated, logout } = useAuth();
 
   const menuRef = useRef(null);
 
   useEffect(() => {
-    //close the menu if the user's click is outside the menu
     function handleClickOutside(e) {
-      // If menu is not open, do nothing
       if (!isMenuOpen) return;
 
-      // If click is OUTSIDE menu, close it
+      // Ignore clicks on the toggle button
+      if (buttonRef?.current && buttonRef.current.contains(e.target)) {
+        return;
+      }
+
+      // Close if click outside the menu
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         closeMenu();
       }
@@ -25,16 +33,18 @@ export const HambergerMenu = ({ isMenuOpen, toggleMenu, closeMenu }) => {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isMenuOpen, closeMenu]);
+  }, [isMenuOpen, closeMenu, buttonRef]);
 
   return (
     <div>
       {isMenuOpen && (
         <div ref={menuRef} className="mobile-menu">
-          <div className="menu-list-label">
-            <img className="avatar" src={gitLogo} alt="profile" />
-            <span>{user?.username}</span>
-          </div>
+          {isAuthenticated && (
+            <div className="menu-list-label">
+              <img className="avatar" src={gitLogo} alt="profile" />
+              <span>{user?.username}</span>
+            </div>
+          )}
 
           {menuData.map((item) => (
             <MenuList

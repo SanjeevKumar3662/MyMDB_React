@@ -4,11 +4,13 @@ import "./Header.css";
 import { HambergerMenu } from "./HambergerMenu";
 
 import { useAuth } from "../../context/AuthProvider";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Header() {
   const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const buttonRef = useRef(null);
 
   const toggleIsMenuOpen = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
@@ -71,13 +73,15 @@ export default function Header() {
       </div>
 
       <div className="right-header">
-        <button className="btn " onClick={toggleIsMenuOpen}>
+        <button ref={buttonRef} className="btn" onClick={toggleIsMenuOpen}>
           {user ? `${user?.username} +` : "Menu"}
         </button>
+
         <HambergerMenu
           isMenuOpen={isMenuOpen}
           toggleMenu={toggleIsMenuOpen}
           closeMenu={closeMenu}
+          buttonRef={buttonRef}
         />
       </div>
     </header>
