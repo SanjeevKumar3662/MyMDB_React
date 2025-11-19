@@ -40,10 +40,17 @@ export const HambergerMenu = ({
       {isMenuOpen && (
         <div ref={menuRef} className="mobile-menu">
           {isAuthenticated && (
-            <div className="menu-list-label">
-              <img className="avatar" src={gitLogo} alt="profile" />
-              <span>{user?.username}</span>
-            </div>
+            <>
+              <div className="menu-list-label">
+                <img className="avatar" src={gitLogo} alt="profile" />
+                <span>{user?.username}</span>
+              </div>
+              <Link to={"/list/watching"}>
+                <div className="menu-list-label">
+                  <span> My Watchlist</span>
+                </div>
+              </Link>
+            </>
           )}
 
           {menuData.map((item) => (

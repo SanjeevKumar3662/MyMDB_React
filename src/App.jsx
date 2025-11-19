@@ -16,6 +16,9 @@ const PersonPage = lazy(() => import("./pages/person-page/PersonPage"));
 const ShutDown = lazy(() => import("./pages/home-page/ShutDown"));
 const SearchPage = lazy(() => import("./pages/search/SearchPage"));
 const AuthPage = lazy(() => import("./pages/auth/AuthLayout"));
+const UserWatchlistPage = lazy(() =>
+  import("./pages/user-watchlist-page/UserWatchlistPage")
+);
 
 function App() {
   const isSiteDown = false;
@@ -140,6 +143,7 @@ function App() {
 
             <Route path="/person_details/:page?/:id" element={<PersonPage />} />
             <Route path="/search/:query" element={<SearchPage />} />
+            <Route path="/list/:status" element={<UserWatchlistPage />} />
 
             <Route path="/auth" element={<AuthPage />} />
           </Routes>
