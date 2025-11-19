@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { getWatchlist } from "../../utils/watchlist-funcions";
+import WatchlistEditModal from "../../pages/user-watchlist-page/WatchlistEditModal";
 
 export default function UserWatchlistPage() {
   const { status } = useParams();
+
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Modal State
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState(null);
 
   const validTabs = [
     "watching",
@@ -14,19 +21,20 @@ export default function UserWatchlistPage() {
     "plan_to_watch",
   ];
 
-  // Fetch list from backend
+  // Fetch watchlist for this tab
   useEffect(() => {
-    setLoading(true);
+    async function load() {
+      setLoading(true);
 
-    if (!validTabs.includes(status)) return;
+      if (!validTabs.includes(status)) return;
 
-    fetch(`/api/list?status=${status}`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => {
-        setItems(data.items || []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      const data = await getWatchlist(status);
+      setItems(data.items || []);
+
+      setLoading(false);
+    }
+
+    load();
   }, [status]);
 
   // Invalid tab
@@ -43,17 +51,17 @@ export default function UserWatchlistPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-4">
-      {/* Top Tabs */}
-      <div className="flex gap-4 border-b pb-2 mb-6 text-sm font-medium">
+    <div className="max-w-5xl mx-auto p-4 text-white">
+      {/* Tabs */}
+      <div className="flex gap-4 border-b border-gray-800 pb-2 mb-6 text-sm font-medium">
         {validTabs.map((tab) => (
           <Link
             key={tab}
             to={`/list/${tab}`}
             className={`capitalize pb-2 ${
               tab === status
-                ? "border-b-4 border-blue-600 text-blue-600"
-                : "text-gray-500"
+                ? "border-b-4 border-blue-500 text-blue-400"
+                : "text-gray-500 hover:text-gray-300"
             }`}
           >
             {tab.replace("_", " ")}
@@ -65,7 +73,7 @@ export default function UserWatchlistPage() {
         {status.replace("_", " ")}
       </h1>
 
-      {/* List */}
+      {/* EMPTY */}
       {items.length === 0 ? (
         <div className="text-gray-500">Nothing here yet.</div>
       ) : (
@@ -73,18 +81,16 @@ export default function UserWatchlistPage() {
           {items.map((entry, index) => (
             <div
               key={entry._id}
-              className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm"
+              className="flex items-center gap-4 p-4 bg-[#0e0e0e] rounded-lg border border-gray-800"
             >
               {/* Poster */}
               <img
-                src={`https://image.tmdb.org/t/p/w92${entry.media.posterPath}`}
+                src={`https://image.tmdb.org/t/p/w154${entry.media.posterPath}`}
+                className="w-[70px] rounded"
                 alt={entry.media.title}
-                className="w-20 rounded"
               />
 
-              {/* Row content */}
               <div className="flex-1">
-                {/* Title */}
                 <div className="font-semibold text-lg">
                   {index + 1}. {entry.media.title}
                 </div>
@@ -93,8 +99,7 @@ export default function UserWatchlistPage() {
                   {entry.media.type}
                 </div>
 
-                {/* Score */}
-                <div className="mt-1 text-sm">
+                <div className="text-sm">
                   Score:{" "}
                   {entry.score !== null ? (
                     <span className="font-bold">{entry.score}</span>
@@ -103,40 +108,47 @@ export default function UserWatchlistPage() {
                   )}
                 </div>
 
-                {/* Progress */}
                 {entry.media.type === "tv" && (
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-400">
                     Progress: {entry.progress} /{" "}
                     {entry.media.totalEpisodes ?? "?"}
                   </div>
                 )}
-
-                {/* Tags */}
-                {entry.tags?.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {entry.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-1 bg-gray-200 rounded-full text-xs"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
 
-              {/* Edit button */}
-              <Link
-                to={`/list/edit/${entry._id}`}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              {/* Edit button -> opens modal */}
+              <button
+                onClick={() => {
+                  setSelectedEntry(entry);
+                  setModalOpen(true);
+                }}
+                className="text-blue-500 hover:text-blue-300 text-sm font-medium"
               >
                 Edit
-              </Link>
+              </button>
             </div>
           ))}
         </div>
       )}
+
+      {/* 🔥 EDIT MODAL */}
+      <WatchlistEditModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        entry={selectedEntry}
+        onSaved={(updated) => {
+          // If deleted:
+          if (!updated) {
+            setItems((prev) => prev.filter((i) => i._id !== selectedEntry._id));
+            return;
+          }
+
+          // If updated:
+          setItems((prev) =>
+            prev.map((i) => (i._id === updated._id ? updated : i))
+          );
+        }}
+      />
     </div>
   );
 }
