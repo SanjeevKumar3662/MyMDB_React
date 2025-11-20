@@ -16,15 +16,15 @@ const HomePage: React.FC = () => {
         <SearchInput />
       </section>
 
-      <div className="flex-sildes">
+      <div className="flex-sildes mt-5">
         <section className="slide-container">
-          <h2>Popular TV Shows</h2>
+          <h2 className="text-2xl">Popular TV Shows</h2>
           <SlidingCards media_type={"tv"} list_type={"popular"}></SlidingCards>
         </section>
       </div>
       <div className="flex-sildes">
         <section className="slide-container">
-          <h2>Popular Movies</h2>
+          <h2 className="text-2xl">Popular Movies</h2>
           <SlidingCards
             media_type={"movie"}
             list_type={"popular"}
