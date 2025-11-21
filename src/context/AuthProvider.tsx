@@ -5,6 +5,7 @@ import {
   useState,
   ReactNode,
 } from "react";
+import { authFetch } from "../utils/authFetch";
 
 interface User {
   _id: string;
@@ -34,94 +35,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const SERVER = import.meta.env.VITE_SERVER_URI;
 
-  // ====================================
-  // 🔥 Refresh access token
-  // ====================================
-  const refreshAccessToken = async (): Promise<boolean> => {
-    try {
-      const res = await fetch(`${SERVER}/api/v1/user/refreshAccessToken`, {
-        method: "POST",
-        credentials: "include",
-      });
+  //  Check login state on page load
 
-      return res.ok;
-    } catch {
-      return false;
-    }
-  };
-
-  // ====================================
-  // 🔥 Check login state on page load
-  // ====================================
   useEffect(() => {
     const checkAuth = async () => {
-      try {
-        let res = await fetch(`${SERVER}/api/v1/user/me`, {
-          method: "GET",
-          credentials: "include",
-        });
+      const { ok, data } = await authFetch<User>(`${SERVER}/api/v1/user/me`);
 
-        // ⚠️ If access token expired, refresh it
-        if (res.status === 401) {
-          const refreshed = await refreshAccessToken();
-
-          if (!refreshed) {
-            setUser(null);
-            return;
-          }
-
-          // Retry the /me request after refreshing
-          res = await fetch(`${SERVER}/api/v1/user/me`, {
-            method: "GET",
-            credentials: "include",
-          });
-        }
-
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data); // /me returns user directly
-        } else {
-          setUser(null);
-        }
-      } catch {
+      if (ok && data) {
+        setUser(data);
+      } else {
         setUser(null);
-      } finally {
-        setLoading(false);
       }
+
+      setLoading(false);
     };
 
     checkAuth();
   }, []);
 
-  // ====================================
-  // 🔥 Login
-  // ====================================
+  //  Login
+
   const login = async (username: string, password: string) => {
-    try {
-      const res = await fetch(`${SERVER}/api/v1/user/login`, {
+    const { ok, data } = await authFetch<{ data: User }>(
+      `${SERVER}/api/v1/user/login`,
+      {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
-      });
+      }
+    );
 
-      if (!res.ok) return false;
+    if (!ok || !data) return false;
 
-      const data = await res.json();
-      setUser(data.data); // your backend sends user in data.data
-      return true;
-    } catch {
-      return false;
-    }
+    setUser(data.data);
+    return true;
   };
 
-  // ====================================
-  // 🔥 Logout
-  // ====================================
+  // Logout
+
   const logout = async () => {
-    await fetch(`${SERVER}/api/v1/user/logout`, {
+    await authFetch(`${SERVER}/api/v1/user/logout`, {
       method: "POST",
-      credentials: "include",
     });
 
     setUser(null);
