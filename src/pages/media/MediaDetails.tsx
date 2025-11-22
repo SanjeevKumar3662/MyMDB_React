@@ -288,7 +288,7 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
             </button>
           ) : (
             <div className="flex justify-center gap-2 mt-4 capitalize">
-              <span className="px-4 py-2 bg-emerald-600 text-white rounded">
+              <span className="px-4 py-2 text-white rounded btn">
                 {watchlistEntry?.status?.replaceAll("_", " ") ?? "In list"}
               </span>
 

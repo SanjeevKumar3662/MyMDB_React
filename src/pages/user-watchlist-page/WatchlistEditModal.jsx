@@ -164,7 +164,7 @@ export default function WatchlistEditModal({
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full border p-2 rounded mb-4"
+                className="w-full border p-2 rounded mb-4 capitalize"
                 style={{
                   width: "100%",
                   padding: 8,
