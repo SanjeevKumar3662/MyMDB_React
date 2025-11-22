@@ -31,6 +31,29 @@ interface Media {
   genres: { id: number; name: string }[];
 }
 
+interface UpdatedWatchlistEntry {
+  message: string;
+  entry: {
+    _id: string;
+    userId: string;
+    mediaId: string;
+    media: {
+      tmdbId: number;
+      title: string;
+      posterPath: string;
+      type: string;
+      totalEpisodes: number | null;
+    };
+    status: string;
+    score: number;
+    progress: number;
+    tags: string[];
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    notes: string;
+  };
+}
 interface WatchlistEntry {
   _id: string;
   status: string;
@@ -50,6 +73,7 @@ const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
   const [userConcent, setUserConcent] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
   const { id } = useParams(); // this is TMDB id (string)
   const [watchlistEntry, setWatchlistEntry] = useState<WatchlistEntry | null>(
     null
@@ -112,6 +136,7 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
 
         if (match) {
           setWatchlistEntry(match);
+          // setStatus()
           return;
         }
       } catch (err) {
@@ -262,9 +287,9 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
               Add to Watchlist
             </button>
           ) : (
-            <div className="flex justify-center gap-2 mt-4">
+            <div className="flex justify-center gap-2 mt-4 capitalize">
               <span className="px-4 py-2 bg-emerald-600 text-white rounded">
-                {watchlistEntry?.status?.replace("_", " ") ?? "In list"}
+                {watchlistEntry?.status?.replaceAll("_", " ") ?? "In list"}
               </span>
 
               <button
@@ -312,12 +337,12 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         entry={watchlistEntry}
-        onSaved={(updated: SetStateAction<WatchlistEntry | null>) => {
+        onSaved={(updated: UpdatedWatchlistEntry) => {
           // if updated === null -> deleted
           if (!updated) {
             setWatchlistEntry(null);
           } else {
-            setWatchlistEntry(updated);
+            setWatchlistEntry({ ...watchlistEntry, ...updated.entry });
           }
         }}
       />
