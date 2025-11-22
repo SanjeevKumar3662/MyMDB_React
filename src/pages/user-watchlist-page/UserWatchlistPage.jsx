@@ -20,7 +20,7 @@ export default function UserWatchlistPage() {
     "dropped",
     "plan_to_watch",
   ];
-
+  // console.log(items);
   // Fetch watchlist for this tab
   useEffect(() => {
     async function load() {
@@ -49,7 +49,7 @@ export default function UserWatchlistPage() {
   if (loading) {
     return <div className="p-6 text-center">Loading...</div>;
   }
-  console.log(items);
+  // console.log(items);
   return (
     <div className="max-w-5xl mx-auto p-4 text-white">
       {/* Tabs */}
@@ -64,13 +64,13 @@ export default function UserWatchlistPage() {
                 : "text-gray-500 hover:text-gray-300"
             }`}
           >
-            {tab.replace("_", " ")}
+            {tab.replaceAll("_", " ")}
           </Link>
         ))}
       </div>
 
       <h1 className="text-2xl font-semibold mb-4 capitalize">
-        {status.replace("_", " ")}
+        {status.replaceAll("_", " ")}
       </h1>
 
       {/* EMPTY */}
@@ -140,7 +140,7 @@ export default function UserWatchlistPage() {
         </div>
       )}
 
-      {/* 🔥 EDIT MODAL */}
+      {/*  EDIT MODAL */}
       <WatchlistEditModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
@@ -152,10 +152,26 @@ export default function UserWatchlistPage() {
             return;
           }
 
+          // if status change , filter it out
+          // console.log("updated", updated);
+
+          if (status !== updated.entry.status) {
+            setItems((prev) =>
+              prev.filter((item) => item._id !== updated.entry._id)
+            );
+            return;
+          }
+          // updated.entry._id
+
           // If updated:
           setItems((prev) =>
-            prev.map((i) => (i._id === updated._id ? updated : i))
+            prev.map((item) =>
+              item._id === updated.entry._id
+                ? { ...item, ...updated.entry }
+                : item
+            )
           );
+          // console.log("items", updated.entry);
         }}
       />
     </div>

@@ -1,5 +1,4 @@
-// src/components/watchlist-edit-modal/WatchlistEditModal.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   updateWatchlistEntry,
   deleteWatchlistEntry,
@@ -66,7 +65,7 @@ export default function WatchlistEditModal({
     try {
       const result = await updateWatchlistEntry(entry._id, updates);
       if (result) {
-        alert("Updated!");
+        // alert("Updated!");
         onSaved?.(result);
         onClose();
       } else {
@@ -86,7 +85,7 @@ export default function WatchlistEditModal({
     try {
       const result = await deleteWatchlistEntry(entry._id);
       if (result) {
-        alert("Removed!");
+        // alert("Removed!");
         onSaved?.(null); // notify parent that entry is gone
         onClose();
       } else {
@@ -141,18 +140,19 @@ export default function WatchlistEditModal({
                 <div style={{ fontWeight: 700, fontSize: "1.125rem" }}>
                   {entry.media?.title ?? entry.media?.name}
                 </div>
-                <div style={{ fontSize: "0.85rem", color: "#9ca3af" }}>
+                {/* <div style={{ fontSize: "0.85rem", color: "#9ca3af" }}>
                   {entry.media?.type}
-                </div>
+                </div> */}
               </div>
               <button
                 onClick={onClose}
                 style={{
-                  background: "transparent",
+                  // background: "transparent",
                   border: "none",
-                  color: "#9ca3af",
+                  // color: "#9ca3af",s
                   cursor: "pointer",
                 }}
+                className="text-xl px-5 rounded-2xl"
                 aria-label="Close"
               >
                 ✕
@@ -176,7 +176,7 @@ export default function WatchlistEditModal({
               >
                 {statuses.map((s) => (
                   <option key={s} value={s}>
-                    {s.replace("_", " ")}
+                    {s.replaceAll("_", " ")}
                   </option>
                 ))}
               </select>
