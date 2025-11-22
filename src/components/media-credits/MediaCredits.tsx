@@ -52,14 +52,15 @@ const MediaCredits: React.FC<{
   const cast = media.cast ?? [];
 
   if (cast.length === 0) return null;
+  console.log("media", cast);
 
   const settings = {
     speed: 500,
-    arrows: false,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    centerMode: true,
-    pauseOnHover: true,
+    arrows: true,
+    // autoplay: true,
+    // autoplaySpeed: 3000,
+    // centerMode: true,
+    // pauseOnHover: true,
     // dots: false,
     // infinite: true,
 
@@ -70,11 +71,12 @@ const MediaCredits: React.FC<{
     slidesToScroll: 1,
     lazyLoadBuffer: 3,
     responsive: [
-      { breakpoint: 1350, settings: { slidesToShow: 6, slidesToScroll: 3 } },
-      { breakpoint: 1024, settings: { slidesToShow: 5, slidesToScroll: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 4, slidesToScroll: 3 } },
-      { breakpoint: 620, settings: { slidesToShow: 3, slidesToScroll: 2 } },
-      { breakpoint: 520, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+      { breakpoint: 1350, settings: { slidesToShow: 6, slidesToScroll: 1 } },
+      { breakpoint: 1024, settings: { slidesToShow: 5, slidesToScroll: 1 } },
+      { breakpoint: 768, settings: { slidesToShow: 4, slidesToScroll: 1 } },
+      { breakpoint: 620, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+      { breakpoint: 520, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+      { breakpoint: 360, settings: { slidesToShow: 1, slidesToScroll: 1 } },
     ],
   };
 

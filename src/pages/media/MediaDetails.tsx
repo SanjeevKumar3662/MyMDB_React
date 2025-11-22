@@ -102,10 +102,6 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
       try {
         const data = await getWatchlist(tab);
 
-        // 🔥 ADD THESE LINES
-        console.log("TAB:", tab);
-        console.log("ITEMS FROM BACKEND:", data.items);
-
         if (!data?.items) continue;
 
         const match = data.items.find(
@@ -267,12 +263,9 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
             </button>
           ) : (
             <div className="flex justify-center gap-2 mt-4">
-              <button
-                onClick={() => setModalOpen(true)}
-                className="px-4 py-2 bg-emerald-600 text-white rounded"
-              >
+              <span className="px-4 py-2 bg-emerald-600 text-white rounded">
                 {watchlistEntry?.status?.replace("_", " ") ?? "In list"}
-              </button>
+              </span>
 
               <button
                 onClick={() => setModalOpen(true)}
@@ -299,10 +292,12 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
           id={id}
         />
       </div>
+
       <p className="section-heading">Credits</p>
       <section className="credits-container slider-bg">
         <MediaCredits media_type={media_type} id={id} />
       </section>
+
       <div className="rec-slider">
         <p className="section-heading">Recommendations</p>
         <MediaContentSlider
