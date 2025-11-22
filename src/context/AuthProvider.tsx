@@ -38,19 +38,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   //  Check login state on page load
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { ok, data } = await authFetch<User>(`${SERVER}/api/v1/user/me`);
+    let isMounted = true;
 
-      if (ok && data) {
-        setUser(data);
-      } else {
-        setUser(null);
+    const checkAuth = async () => {
+      // 1) FIRST try refreshing token silently
+      const refreshRes = await fetch(
+        `${SERVER}/api/v1/user/refreshAccessToken`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
+      // 2) If refresh fails → user is logged out
+      if (!refreshRes.ok) {
+        if (isMounted) {
+          setUser(null);
+          setLoading(false);
+        }
+        return;
       }
 
-      setLoading(false);
+      // 3) Now call /me with the new access token
+      const { ok, data } = await authFetch<User>(`${SERVER}/api/v1/user/me`);
+
+      if (isMounted) {
+        if (ok && data) {
+          setUser(data);
+        } else {
+          setUser(null);
+        }
+
+        setLoading(false);
+      }
     };
 
     checkAuth();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   //  Login
