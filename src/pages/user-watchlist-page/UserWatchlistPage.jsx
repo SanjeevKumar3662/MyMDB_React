@@ -49,7 +49,7 @@ export default function UserWatchlistPage() {
   if (loading) {
     return <div className="p-6 text-center">Loading...</div>;
   }
-
+  console.log(items);
   return (
     <div className="max-w-5xl mx-auto p-4 text-white">
       {/* Tabs */}
@@ -83,17 +83,23 @@ export default function UserWatchlistPage() {
               key={entry._id}
               className="flex items-center gap-4 p-4 bg-[#0e0e0e] rounded-lg border border-gray-800"
             >
+              <span>{index + 1}</span>
+
               {/* Poster */}
-              <img
-                src={`https://image.tmdb.org/t/p/w154${entry.media.posterPath}`}
-                className="w-[70px] rounded"
-                alt={entry.media.title}
-              />
+              <Link to={`/${entry.media.type}_details/${entry.media.tmdbId}`}>
+                <img
+                  src={`https://image.tmdb.org/t/p/w154${entry.media.posterPath}`}
+                  className="w-[70px] rounded"
+                  alt={entry.media.title}
+                />
+              </Link>
 
               <div className="flex-1">
-                <div className="font-semibold text-lg">
-                  {index + 1}. {entry.media.title}
-                </div>
+                <Link to={`/${entry.media.type}_details/${entry.media.tmdbId}`}>
+                  <span className="font-semibold text-lg text-blue-500">
+                    {entry.media.title}
+                  </span>
+                </Link>
 
                 <div className="text-xs text-gray-500 uppercase">
                   {entry.media.type}
@@ -114,6 +120,9 @@ export default function UserWatchlistPage() {
                     {entry.media.totalEpisodes ?? "?"}
                   </div>
                 )}
+                <div className="text-xs text-gray-500">
+                  {entry.notes === "" ? "Add Notes" : entry.notes}
+                </div>
               </div>
 
               {/* Edit button -> opens modal */}
@@ -122,7 +131,7 @@ export default function UserWatchlistPage() {
                   setSelectedEntry(entry);
                   setModalOpen(true);
                 }}
-                className="text-blue-500 hover:text-blue-300 text-sm font-medium"
+                className="hover:text-blue-300 text-sm font-medium p-4 rounded-xl text-white"
               >
                 Edit
               </button>
