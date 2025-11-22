@@ -52,7 +52,7 @@ const MediaCredits: React.FC<{
   const cast = media.cast ?? [];
 
   if (cast.length === 0) return null;
-  console.log("media", cast);
+  // console.log("media", cast);
 
   const settings = {
     speed: 500,
