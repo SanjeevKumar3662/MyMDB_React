@@ -3,6 +3,14 @@ import { useParams, Link } from "react-router-dom";
 import { getWatchlist } from "../../utils/watchlist-funcions";
 import WatchlistEditModal from "../../pages/user-watchlist-page/WatchlistEditModal";
 
+const validTabs = [
+  "watching",
+  "completed",
+  "on_hold",
+  "dropped",
+  "plan_to_watch",
+];
+
 export default function UserWatchlistPage() {
   const { status } = useParams();
 
@@ -13,13 +21,6 @@ export default function UserWatchlistPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
 
-  const validTabs = [
-    "watching",
-    "completed",
-    "on_hold",
-    "dropped",
-    "plan_to_watch",
-  ];
   // console.log(items);
   // Fetch watchlist for this tab
   useEffect(() => {
