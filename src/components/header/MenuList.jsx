@@ -10,7 +10,7 @@ export const MenuList = ({ label, children, level, closeMenu }) => {
   };
   // console.log(toOpen);
   return (
-    <div className="  " key={label}>
+    <div className="cursor-pointer" key={label}>
       <span className=" menu-list-label" onClick={(e) => handleClickMenu(e)}>
         {label} {children && (toOpen ? "-" : "+")}
       </span>
