@@ -1,6 +1,6 @@
 // src/pages/media-details/MediaDetails.jsx
 import "./MediaDetails.css";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MediaCredits from "../../components/media-credits/MediaCredits";
 import MediaContentSlider from "../../components/media-content-slider/MediaContentSlider";
@@ -73,7 +73,6 @@ const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
   const [userConcent, setUserConcent] = useState<boolean | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
   const { id } = useParams(); // this is TMDB id (string)
   const [watchlistEntry, setWatchlistEntry] = useState<WatchlistEntry | null>(
     null
