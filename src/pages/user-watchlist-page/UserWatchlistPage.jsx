@@ -75,12 +75,16 @@ export default function UserWatchlistPage() {
             to={`/list/${tab}`}
             className={`capitalize pb-2 ${
               tab === status
-                ? "border-b-4 border-blue-500 text-blue-400"
-                : "text-gray-500 hover:text-gray-300"
+                ? "border-b-4 font-bold text-lg border-blue-500 text-blue-400"
+                : "text-gray-200 font-bold text-lg hover:text-gray-300"
             }`}
           >
             {tab.replaceAll("_", " ")}{" "}
-            <span className="text-green-400">{stats[tab]}</span>
+            {stats[tab] && (
+              <span className=" bg-gray-600 rounded-md p-1 text-white ">
+                {stats[tab]}
+              </span>
+            )}
           </Link>
         ))}
       </div>
