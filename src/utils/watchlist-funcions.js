@@ -117,3 +117,16 @@ export async function getWatchlistStats() {
     return {};
   }
 }
+
+export async function getEntryStatus(id, setEntryStatus) {
+  const entryStatus = await authFetch(
+    `${SERVER_URI}/api/v1/watchlist/status/${id}`,
+    {
+      method: "GET",
+    }
+  );
+  // console.log("entryStatus", entryStatus);
+  setEntryStatus(entryStatus?.data.data);
+
+  return entryStatus;
+}
