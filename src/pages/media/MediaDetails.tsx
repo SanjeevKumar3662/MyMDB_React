@@ -7,7 +7,7 @@ import MediaContentSlider from "../../components/media-content-slider/MediaConte
 import { useQuery } from "@tanstack/react-query";
 import AgeWarningPopup from "../../components/age-warning-popup/AgeWarningPopUp";
 import countries from "../../data/country-name.js";
-import { addToWatchlist, getWatchlist } from "../../utils/watchlist-funcions";
+import { addToWatchlist, getEntryStatus } from "../../utils/watchlist-funcions";
 import WatchlistEditModal from "../user-watchlist-page/WatchlistEditModal";
 
 interface Media {
@@ -57,15 +57,16 @@ interface UpdatedWatchlistEntry {
 interface WatchlistEntry {
   _id: string;
   status: string;
-  score: number | null;
-  progress: number;
+  exists?: boolean;
+  score?: number | null;
+  progress?: number;
   notes?: string;
-  media: {
-    tmdbId: number;
-    title: string;
-    posterPath: string;
-    type: string;
-    totalEpisodes: number | null;
+  media?: {
+    tmdbId?: number;
+    title?: string;
+    posterPath?: string;
+    type?: string;
+    totalEpisodes?: number | null;
   };
 }
 
@@ -74,9 +75,8 @@ const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
   const [userConcent, setUserConcent] = useState<boolean | null>(null);
   const { id } = useParams(); // this is TMDB id (string)
-  const [watchlistEntry, setWatchlistEntry] = useState<WatchlistEntry | null>(
-    null
-  );
+  const [watchlistEntryStatus, setWatchlistEntryStatus] =
+    useState<WatchlistEntry | null>(null);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -111,44 +111,11 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
     }
   }
 
-  // find watchlist entry for this media by scanning all tabs
-  async function findEntryForMedia() {
-    if (!media) return;
-    const tabs = [
-      "watching",
-      "completed",
-      "on_hold",
-      "dropped",
-      "plan_to_watch",
-    ];
-    for (const tab of tabs) {
-      try {
-        const data = await getWatchlist(tab);
-
-        if (!data?.items) continue;
-
-        const match = data.items.find(
-          (item: { media: { tmdbId: any; type: string } }) =>
-            Number(item.media?.tmdbId) === Number(media.id) &&
-            item.media?.type === media_type
-        );
-
-        if (match) {
-          setWatchlistEntry(match);
-          // setStatus()
-          return;
-        }
-      } catch (err) {
-        console.warn("watchlist load error", err);
-      }
-    }
-    setWatchlistEntry(null);
-  }
-
-  // re-run when media loads
+  // get and set watchList status
   useEffect(() => {
-    findEntryForMedia();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    (async () => {
+      await getEntryStatus(id, setWatchlistEntryStatus);
+    })();
   }, [media]);
 
   if (isPending) {
@@ -189,12 +156,12 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
           padding: "20px",
         }}
       >
-        ❌ Sorry, you are not old enough for this content. you can still browse
-        other content
+        <span className="text-red-600 text-3xl">X</span> Sorry, you are not old
+        enough for this content. you can still browse other content
       </div>
     );
   }
-
+  // console.log("watchlistEntryStatus", watchlistEntryStatus);
   return (
     <>
       <div className="details-container">
@@ -274,12 +241,12 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
           </div>
 
           {/* Button: Add OR status + open modal */}
-          {!watchlistEntry ? (
+          {!watchlistEntryStatus?.exists ? (
             <button
               onClick={async () => {
                 await addToWatchlist(media.id, media_type);
                 // refresh local entry detection
-                findEntryForMedia();
+                getEntryStatus(id, setWatchlistEntryStatus);
               }}
               className="px-4 py-2 bg-blue-600 text-white rounded"
             >
@@ -288,7 +255,7 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
           ) : (
             <div className="flex justify-center gap-2 mt-4 capitalize">
               <span className="px-4 py-2 text-white rounded btn">
-                {watchlistEntry?.status?.replaceAll("_", " ") ?? "In list"}
+                {watchlistEntryStatus?.status?.replaceAll("_", " ")}
               </span>
 
               <button
@@ -335,13 +302,18 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
       <WatchlistEditModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        entry={watchlistEntry}
+        entry={watchlistEntryStatus}
         onSaved={(updated: UpdatedWatchlistEntry) => {
-          // if updated === null -> deleted
+          // if updated === null then its deleted
+          // console.log("updated", updated);
           if (!updated) {
-            setWatchlistEntry(null);
+            setWatchlistEntryStatus(null);
           } else {
-            setWatchlistEntry({ ...watchlistEntry, ...updated.entry });
+            setWatchlistEntryStatus({
+              _id: updated?.entry?._id,
+              status: updated.entry.status,
+              exists: true,
+            });
           }
         }}
       />
