@@ -1,23 +1,30 @@
+// src/utils/watchlistApi.js
+import { authFetch } from "./authFetch.js";
+
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 export async function addToWatchlist(tmdbId, type) {
   try {
-    const res = await fetch(`${SERVER_URI}/api/v1/watchlist`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        tmdbId,
-        type, // "movie" or "tv"
-        status: "plan_to_watch", // optional default
-        progress: 0,
-      }),
-    });
+    const { ok, status, data } = await authFetch(
+      `${SERVER_URI}/api/v1/watchlist`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tmdbId,
+          type, // "movie" or "tv"
+          status: "plan_to_watch", // optional default
+          progress: 0,
+        }),
+      }
+    );
 
-    const data = await res.json();
-    console.log("data from watchlist-function", data);
+    if (!ok) {
+      console.error("addToWatchlist failed", status, data);
+      return null;
+    }
     return data;
   } catch (err) {
     console.error("Error adding to watchlist:", err);
@@ -25,14 +32,22 @@ export async function addToWatchlist(tmdbId, type) {
   }
 }
 
-export async function getWatchlist(status) {
+export async function getWatchlist(statusFilter) {
   try {
-    const res = await fetch(`${SERVER_URI}/api/v1/watchlist?status=${status}`, {
-      method: "GET",
-      credentials: "include",
-    });
+    const { ok, status, data } = await authFetch(
+      `${SERVER_URI}/api/v1/watchlist?status=${encodeURIComponent(
+        statusFilter
+      )}`,
+      {
+        method: "GET",
+      }
+    );
 
-    return await res.json();
+    if (!ok) {
+      console.error("getWatchlist failed", status, data);
+      return { items: [] };
+    }
+    return data;
   } catch (err) {
     console.error("Error fetching watchlist:", err);
     return { items: [] };
@@ -41,16 +56,22 @@ export async function getWatchlist(status) {
 
 export async function updateWatchlistEntry(id, updates) {
   try {
-    const res = await fetch(`${SERVER_URI}/api/v1/watchlist/${id}`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updates),
-    });
+    const { ok, status, data } = await authFetch(
+      `${SERVER_URI}/api/v1/watchlist/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updates),
+      }
+    );
 
-    return await res.json();
+    if (!ok) {
+      console.error("updateWatchlistEntry failed", status, data);
+      return null;
+    }
+    return data;
   } catch (err) {
     console.error("Error updating entry:", err);
     return null;
@@ -59,12 +80,18 @@ export async function updateWatchlistEntry(id, updates) {
 
 export async function deleteWatchlistEntry(id) {
   try {
-    const res = await fetch(`${SERVER_URI}/api/v1/watchlist/${id}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
+    const { ok, status, data } = await authFetch(
+      `${SERVER_URI}/api/v1/watchlist/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-    return await res.json();
+    if (!ok) {
+      console.error("deleteWatchlistEntry failed", status, data);
+      return null;
+    }
+    return data;
   } catch (err) {
     console.error("Error deleting entry:", err);
     return null;
@@ -73,12 +100,18 @@ export async function deleteWatchlistEntry(id) {
 
 export async function getWatchlistStats() {
   try {
-    const res = await fetch(`${SERVER_URI}/api/v1/watchlist/stats`, {
-      method: "GET",
-      credentials: "include",
-    });
+    const { ok, status, data } = await authFetch(
+      `${SERVER_URI}/api/v1/watchlist/stats`,
+      {
+        method: "GET",
+      }
+    );
 
-    return await res.json();
+    if (!ok) {
+      console.error("getWatchlistStats failed", status, data);
+      return {};
+    }
+    return data;
   } catch (err) {
     console.error("Error fetching stats:", err);
     return {};
