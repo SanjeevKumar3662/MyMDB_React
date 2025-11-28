@@ -2,35 +2,79 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <title>Sanjeev's MDB – Explore Trending Movies & TV Shows</title>
+
+    <!-- Meta Description -->
     <meta
       name="description"
-      content="Sanjeev's MDB (sanjeevsmdb) is a movie database app by SanjeevKumar3662. Like IMDB, it lets you explore trending movies and TV shows with trailers, ratings, and recommendations."
+      content="Sanjeev's MDB (sanjeevsmdb) is a movie database app similar to IMDB. Explore trending movies, TV shows, trailers, ratings, reviews, and curated recommendations."
     />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Sanjeev's MDB",
-        "alternateName": ["sanjeevsmdb", "SanjeevMDB"],
-        "url": "https://sanjeevsmdb.vercel.app/",
-        "creator": {
-          "@type": "Person",
-          "name": "SanjeevKumar3662"
-        },
-        "description": "Sanjeev's MDB (sanjeevsmdb) is a movie database app similar to IMDB, featuring trending movies, TV shows, trailers, ratings, and recommendations."
-      }
-    </script>
 
-    <link rel="icon" type="image/svg+xml" href="/mdbLogo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link rel="preload" as="image" href="/hero.webp" /> -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/mdbLogo.png" />
+
+    <!-- Google Site Verification -->
     <meta
       name="google-site-verification"
       content="C3DeC3d5Bys9w52VCiZZuE3W2fTsbGtSMusGw12Vqps"
     />
-    <title>Sanjeev's MDB</title>
+    <meta
+      name="google-site-verification"
+      content="GLuFbbhYJ_3baUFnhcURqwCeaF5ZYZYxzQazn3y64VU"
+    />
+
+    <!-- Open Graph Tags (for WhatsApp, Facebook, LinkedIn previews) -->
+    <meta property="og:title" content="Sanjeev's MDB" />
+    <meta
+      property="og:description"
+      content="Explore trending movies, TV shows, trailers, ratings, reviews, and recommendations."
+    />
+    <meta
+      property="og:image"
+      content="https://mdb.sanjeevkumar.site/og-image.png"
+    />
+    <meta property="og:url" content="https://mdb.sanjeevkumar.site" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sanjeev's MDB" />
+    <meta
+      name="twitter:description"
+      content="Explore trending movies, TV shows, trailers, ratings, reviews, and recommendations."
+    />
+    <meta
+      name="twitter:image"
+      content="https://mdb.sanjeevkumar.site/og-image.png"
+    />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Sanjeev's MDB",
+        "alternateName": ["sanjeevsmdb", "SanjeevMDB"],
+        "url": "https://mdb.sanjeevkumar.site",
+        "applicationCategory": "EntertainmentApplication",
+        "operatingSystem": "All",
+        "creator": {
+          "@type": "Person",
+          "name": "SanjeevKumar3662",
+          "url": "https://github.com/SanjeevKumar3662"
+        },
+        "description": "Sanjeev's MDB is a movie database app similar to IMDB, featuring trending movies, TV shows, trailers, ratings, and recommendations.",
+        "logo": "https://mdb.sanjeevkumar.site/mdbLogo.png",
+        "sameAs": [
+          "https://github.com/SanjeevKumar3662",
+          "https://www.linkedin.com/in/sanjeevkumar3662/"
+        ]
+      }
+    </script>
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
