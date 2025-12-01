@@ -9,6 +9,7 @@ import AgeWarningPopup from "../../components/age-warning-popup/AgeWarningPopUp"
 import countries from "../../data/country-name.js";
 import { addToWatchlist, getEntryStatus } from "../../utils/watchlist-funcions";
 import WatchlistEditModal from "../user-watchlist-page/WatchlistEditModal";
+import { Comments } from "../../components/comments/Comments";
 
 interface Media {
   title: string;
@@ -163,7 +164,7 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
   }
   // console.log("watchlistEntryStatus", watchlistEntryStatus);
   return (
-    <>
+    <div className="flex flex-col p-1 justify-center">
       <div className="details-container">
         {media.backdrop_path && (
           <img
@@ -269,6 +270,8 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
         </section>
       </div>
 
+      <Comments tmdbId={id} media_type={media_type} />
+
       <div className="video-container">
         <MediaContentSlider
           media_type={media_type}
@@ -317,7 +320,7 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
           }
         }}
       />
-    </>
+    </div>
   );
 };
 
