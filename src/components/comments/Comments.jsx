@@ -18,7 +18,7 @@ export const Comments = ({ tmdbId, media_type }) => {
           }
         );
         const json = await res.json();
-        console.log("Comments data", json);
+        // console.log("Comments data", json);
         setComments(json.data);
       } catch (error) {
         console.error("error", error.message);
@@ -33,7 +33,7 @@ export const Comments = ({ tmdbId, media_type }) => {
   };
   const submitUserCommnet = async () => {
     try {
-      console.log(userComment);
+      // console.log(userComment);
       const res = await authFetch(`${SERVER}/api/v1/comment/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -43,17 +43,20 @@ export const Comments = ({ tmdbId, media_type }) => {
           comment: userComment,
         }),
       });
-      console.log(res);
-      const data = await res.json;
-      console.log("data", data);
+      // console.log("res", res);
+
+      const data = res.data.data;
+      // console.log("data ", data);
       if (res.ok) {
-        window.alert("Comment submitted");
+        // window.alert("Comment submitted");
+        setComments([...comments, data]);
+        setUserComment("");
       }
     } catch (error) {
       console.error("Failed to submit comment", error.message);
     }
   };
-
+  // console.log(object);
   return (
     <div className="border flex   flex-col gap-4 border-white p-4  my-2">
       <span className="section-heading">This is a comment section</span>
