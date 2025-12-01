@@ -56,7 +56,7 @@ export const Comments = ({ tmdbId, media_type }) => {
       console.error("Failed to submit comment", error.message);
     }
   };
-  // console.log(object);
+  console.log(comments);
   return (
     <div className="border flex   flex-col gap-4 border-white p-4  my-2">
       <span className="section-heading">This is a comment section</span>
@@ -84,7 +84,7 @@ export const Comments = ({ tmdbId, media_type }) => {
                 className="border rounded-lg border-white p-3  flex justify-start text-white text-xl gap-4"
                 key={ele._id}
               >
-                <div> {ele._id} :</div>
+                <div>@{ele.userId.username} :</div>
                 <span>{ele.comment}</span>
               </div>
             );
