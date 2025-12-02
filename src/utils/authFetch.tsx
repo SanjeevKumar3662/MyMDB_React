@@ -1,12 +1,7 @@
-// src/utils/authFetch.ts
-
-/**
- - a  wrapper around fetch that:
- - automatically includes credentials (cookies)
- - detects 401 (expired access token)
-  - calls /refreshAccessToken automatically
-  - retries the original request once
- */
+//  - automatically includes credentials field for cookies
+//  - detects 401 expired access token
+// - calls / refreshAccessToken automatically
+// - retries the original request one time
 
 export async function authFetch<T = any>(
   url: string,
@@ -25,26 +20,26 @@ export async function authFetch<T = any>(
 
   // if access token expired
   if (res.status === 401) {
-    console.warn("Access token expired → attempting refresh...");
+    console.warn("Access token expired / attempting refresh...");
 
     const refreshRes = await fetch(`${SERVER}/api/v1/user/refreshAccessToken`, {
       method: "POST",
       credentials: "include",
     });
 
-    // if refresh also fails → user must login again
+    // if refresh also fails then user must login again
     if (!refreshRes.ok) {
-      console.warn("Refresh token expired → login required");
+      console.warn("Refresh token expired , login required");
       return { ok: false, status: res.status, data: null };
     }
 
-    console.log("Access token refreshed → retrying request...");
+    console.log("Access token refreshed, now retrying request...");
 
     // retry the original request with new access token
     res = await fetch(url, config);
   }
 
-  // try to parse JSON but safely
+  // parse json here, T is a generic
   let json: T | null = null;
   try {
     json = await res.json();
