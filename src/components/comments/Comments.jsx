@@ -76,7 +76,7 @@ export const Comments = ({ tmdbId, media_type }) => {
   // console.log(comments);
 
   return (
-    <div className="border flex   flex-col gap-4 border-white p-4  my-2">
+    <div className="border flex   flex-col gap-4 p-4  my-2">
       <span className="section-heading">This is a comment section</span>
 
       <div className="flex flex-row gap-3">
@@ -89,7 +89,10 @@ export const Comments = ({ tmdbId, media_type }) => {
           value={userComment}
         ></textarea>
 
-        <button onClick={submitUserCommnet} className="btn flex-1 rounded-lg">
+        <button
+          onClick={submitUserCommnet}
+          className="btn p-1 flex-1 rounded-lg"
+        >
           Submit
         </button>
       </div>
@@ -99,19 +102,22 @@ export const Comments = ({ tmdbId, media_type }) => {
           comments.map((ele) => {
             return (
               <div
-                className="border rounded-lg border-white p-3  flex justify-start text-white text-xl gap-4"
+                className="border rounded-lg  border-white py-1 px-2   flex-col flex items-start text-white text-md "
                 key={ele._id}
               >
                 <div>@{ele.userId.username} :</div>
-                <span>{ele.comment}</span>{" "}
-                {user._id === ele.userId._id && (
-                  <button
-                    className="p-3 rounded-lg"
-                    onClick={(e) => deleteUserComment(e, ele._id)}
-                  >
-                    x
-                  </button>
-                )}
+
+                <div className="flex justify-between items-baseline w-full ">
+                  <div className="break-all">{ele.comment}</div>{" "}
+                  {user._id === ele.userId._id && (
+                    <button
+                      className="p-1 rounded-sm"
+                      onClick={(e) => deleteUserComment(e, ele._id)}
+                    >
+                      x
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })}
