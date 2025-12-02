@@ -4,13 +4,6 @@ import {
   deleteWatchlistEntry,
 } from "../../utils/watchlist-funcions.js";
 
-/**
- * Props:
- * - isOpen: boolean
- * - onClose: () => void
- * - entry: watchlist entry object (full entry)
- * - onSaved: (updatedEntry) => void   // optional callback to refresh parent
- */
 export default function WatchlistEditModal({
   isOpen,
   onClose,
@@ -19,7 +12,6 @@ export default function WatchlistEditModal({
 }) {
   const [loading, setLoading] = useState(true);
 
-  // Local editable states - MUST NOT USE entry
   const [status, setStatus] = useState("");
   const [score, setScore] = useState("");
   const [progress, setProgress] = useState(0);
@@ -27,7 +19,7 @@ export default function WatchlistEditModal({
 
   useEffect(() => {
     if (!isOpen) return;
-    // initialize local fields from entry
+
     setLoading(true);
     if (entry) {
       setStatus(entry.status ?? "");
@@ -55,6 +47,7 @@ export default function WatchlistEditModal({
 
   async function handleSave() {
     if (!entry) return;
+
     const updates = {
       status,
       score: score === "" ? null : Number(score),
@@ -85,8 +78,7 @@ export default function WatchlistEditModal({
     try {
       const result = await deleteWatchlistEntry(entry._id);
       if (result) {
-        // alert("Removed!");
-        onSaved?.(null); // notify parent that entry is gone
+        onSaved?.(null);
         onClose();
       } else {
         alert("Failed to remove. Try again.");
@@ -99,28 +91,11 @@ export default function WatchlistEditModal({
 
   return (
     <div
-      className="watchlist-modal-backdrop"
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.6)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 9999,
-      }}
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-9999"
       onClick={onClose}
     >
       <div
-        className="watchlist-modal"
-        style={{
-          width: "min(720px, 95vw)",
-          background: "#0b0b0b",
-          color: "white",
-          borderRadius: 12,
-          padding: 20,
-          boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
-        }}
+        className="w-[95vw] max-w-[720px] bg-blue-400 text-white rounded-xl p-5 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {loading ? (
@@ -129,50 +104,30 @@ export default function WatchlistEditModal({
           <div className="p-6 text-center text-red-400">Entry not found.</div>
         ) : (
           <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 12,
-              }}
-            >
+            {/* Header */}
+            <div className="flex justify-between gap-3">
               <div>
-                <div style={{ fontWeight: 700, fontSize: "1.125rem" }}>
+                <div className="font-bold text-lg">
                   {entry.media?.title ?? entry.media?.name}
                 </div>
-                {/* <div style={{ fontSize: "0.85rem", color: "#9ca3af" }}>
-                  {entry.media?.type}
-                </div> */}
               </div>
               <button
                 onClick={onClose}
-                style={{
-                  // background: "transparent",
-                  border: "none",
-                  // color: "#9ca3af",s
-                  cursor: "pointer",
-                }}
-                className="text-xl px-5 rounded-2xl"
                 aria-label="Close"
+                className="text-xl px-5 rounded-2xl cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div style={{ marginTop: 16 }}>
+            {/* Form */}
+            <div className="mt-4">
+              {/* Status */}
               <label className="block mb-2 font-medium">Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full border p-2 rounded mb-4 capitalize"
-                style={{
-                  width: "100%",
-                  padding: 8,
-                  borderRadius: 6,
-                  background: "#111",
-                  color: "white",
-                  border: "1px solid #2b2b2b",
-                }}
+                className="w-full p-2 mb-4 rounded bg-[#111] text-white border border-[#2b2b2b] capitalize"
               >
                 {statuses.map((s) => (
                   <option key={s} value={s}>
@@ -181,6 +136,7 @@ export default function WatchlistEditModal({
                 ))}
               </select>
 
+              {/* Score */}
               <label className="block mb-2 font-medium">Score (0–10)</label>
               <input
                 type="number"
@@ -188,17 +144,10 @@ export default function WatchlistEditModal({
                 max="10"
                 value={score}
                 onChange={(e) => setScore(e.target.value)}
-                className="w-full border p-2 rounded mb-4"
-                style={{
-                  width: "100%",
-                  padding: 8,
-                  borderRadius: 6,
-                  background: "#111",
-                  color: "white",
-                  border: "1px solid #2b2b2b",
-                }}
+                className="w-full p-2 mb-4 rounded bg-[#111] text-white border border-[#2b2b2b]"
               />
 
+              {/* Progress (TV only) */}
               {entry.media?.type === "tv" && (
                 <>
                   <label className="block mb-2 font-medium">
@@ -210,80 +159,39 @@ export default function WatchlistEditModal({
                     max={entry.media.totalEpisodes ?? undefined}
                     value={progress}
                     onChange={(e) => setProgress(e.target.value)}
-                    className="w-full border p-2 rounded mb-4"
-                    style={{
-                      width: "100%",
-                      padding: 8,
-                      borderRadius: 6,
-                      background: "#111",
-                      color: "white",
-                      border: "1px solid #2b2b2b",
-                    }}
+                    className="w-full p-2 mb-4 rounded bg-[#111] text-white border border-[#2b2b2b]"
                   />
                 </>
               )}
 
+              {/* Notes */}
               <label className="block mb-2 font-medium">Notes</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full border p-2 rounded mb-4"
                 rows="4"
-                style={{
-                  width: "100%",
-                  padding: 8,
-                  borderRadius: 6,
-                  background: "#111",
-                  color: "white",
-                  border: "1px solid #2b2b2b",
-                }}
+                className="w-full p-2 mb-4 rounded bg-[#111] text-white border border-[#2b2b2b]"
               ></textarea>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 12,
-                }}
-              >
+              {/* Footer Buttons */}
+              <div className="flex justify-between gap-3">
                 <button
                   onClick={handleDelete}
-                  className="px-4 py-2"
-                  style={{
-                    background: "#b91c1c",
-                    color: "white",
-                    borderRadius: 6,
-                    border: "none",
-                    cursor: "pointer",
-                  }}
+                  className="px-4 py-2 text-white rounded cursor-pointer"
                 >
                   Delete
                 </button>
 
-                <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
+                <div className="ml-auto flex gap-2">
                   <button
                     onClick={onClose}
-                    style={{
-                      background: "transparent",
-                      color: "#9ca3af",
-                      borderRadius: 6,
-                      padding: "8px 12px",
-                      border: "1px solid #2b2b2b",
-                      cursor: "pointer",
-                    }}
+                    className="px-3 py-2 border border-[#2b2b2b] rounded text-white cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSave}
-                    style={{
-                      background: "#0369a1",
-                      color: "white",
-                      borderRadius: 6,
-                      padding: "8px 12px",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
+                    className="px-3 py-2  text-white rounded cursor-pointer"
                   >
                     Save
                   </button>
