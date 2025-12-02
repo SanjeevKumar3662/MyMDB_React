@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { authFetch } from "../../utils/authFetch";
+import { useAuth } from "../../context/AuthProvider";
 
 const SERVER = import.meta.env.VITE_SERVER_URI;
 
 export const Comments = ({ tmdbId, media_type }) => {
   const [userComment, setUserComment] = useState("");
   const [comments, setComments] = useState([]);
+  const { user } = useAuth();
+  // console.log(user);
 
-  // console.log(typeof tmdbId);
   useEffect(() => {
     const getMediaComment = async () => {
       try {
@@ -28,12 +30,11 @@ export const Comments = ({ tmdbId, media_type }) => {
   }, [tmdbId, media_type]);
 
   const handleUserComment = (e) => {
-    // console.log("comment submit", e.target.value);
     setUserComment(e.target.value);
   };
+
   const submitUserCommnet = async () => {
     try {
-      // console.log(userComment);
       const res = await authFetch(`${SERVER}/api/v1/comment/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -43,12 +44,10 @@ export const Comments = ({ tmdbId, media_type }) => {
           comment: userComment,
         }),
       });
-      // console.log("res", res);
 
       const data = res.data.data;
-      // console.log("data ", data);
+
       if (res.ok) {
-        // window.alert("Comment submitted");
         setComments([...comments, data]);
         setUserComment("");
       }
@@ -56,7 +55,26 @@ export const Comments = ({ tmdbId, media_type }) => {
       console.error("Failed to submit comment", error.message);
     }
   };
-  console.log(comments);
+
+  const deleteUserComment = async (e, commentId) => {
+    e.preventDefault();
+    // console.log("commentId", commentId);
+
+    const res = await authFetch(`${SERVER}/api/v1/comment/`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        commentId,
+      }),
+    });
+
+    if (res.ok) {
+      // window.alert("comment deleted");
+      setComments(comments.filter((comment) => comment._id !== commentId));
+    }
+  };
+  // console.log(comments);
+
   return (
     <div className="border flex   flex-col gap-4 border-white p-4  my-2">
       <span className="section-heading">This is a comment section</span>
@@ -85,7 +103,15 @@ export const Comments = ({ tmdbId, media_type }) => {
                 key={ele._id}
               >
                 <div>@{ele.userId.username} :</div>
-                <span>{ele.comment}</span>
+                <span>{ele.comment}</span>{" "}
+                {user._id === ele.userId._id && (
+                  <button
+                    className="p-3 rounded-lg"
+                    onClick={(e) => deleteUserComment(e, ele._id)}
+                  >
+                    x
+                  </button>
+                )}
               </div>
             );
           })}

@@ -56,18 +56,20 @@ interface UpdatedWatchlistEntry {
   };
 }
 interface WatchlistEntry {
-  _id: string;
-  status: string;
   exists?: boolean;
-  score?: number | null;
-  progress?: number;
-  notes?: string;
-  media?: {
-    tmdbId?: number;
-    title?: string;
-    posterPath?: string;
-    type?: string;
-    totalEpisodes?: number | null;
+  entry: {
+    _id: string;
+    status: string;
+    score?: number | null;
+    progress?: number;
+    notes?: string;
+    media?: {
+      tmdbId?: number;
+      title?: string;
+      posterPath?: string;
+      type?: string;
+      totalEpisodes?: number | null;
+    };
   };
 }
 
@@ -118,7 +120,7 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
       await getEntryStatus(id, setWatchlistEntryStatus);
     })();
   }, [media]);
-
+  // console.log("watchlistentrystatus", watchlistEntryStatus);
   if (isPending) {
     return (
       <div
@@ -256,7 +258,7 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
           ) : (
             <div className="flex justify-center gap-2 mt-4 capitalize">
               <span className="px-4 py-2 text-white rounded btn">
-                {watchlistEntryStatus?.status?.replaceAll("_", " ")}
+                {watchlistEntryStatus?.entry?.status?.replaceAll("_", " ")}
               </span>
 
               <button
@@ -305,16 +307,15 @@ const MediaDetails: React.FC<{ media_type: string }> = ({ media_type }) => {
       <WatchlistEditModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        entry={watchlistEntryStatus}
+        entry={watchlistEntryStatus?.entry}
         onSaved={(updated: UpdatedWatchlistEntry) => {
           // if updated === null then its deleted
-          // console.log("updated", updated);
+          console.log("updated", updated);
           if (!updated) {
             setWatchlistEntryStatus(null);
           } else {
             setWatchlistEntryStatus({
-              _id: updated?.entry?._id,
-              status: updated.entry.status,
+              ...updated,
               exists: true,
             });
           }
